@@ -7,34 +7,34 @@ from .serializers import (
     ShelfSerializer,
     BookSerializer,
 )
-from .permissions import IsAdminOrLibrarian
+from core.permissions import IsAdminOrLibrarianModify
 
 
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
-    permission_classes = [IsAdminOrLibrarian]
+    permission_classes = [IsAdminOrLibrarianModify]
 
 
 class PublisherViewSet(viewsets.ModelViewSet):
     queryset = Publisher.objects.all()
     serializer_class = PublisherSerializer
-    permission_classes = [IsAdminOrLibrarian]
+    permission_classes = [IsAdminOrLibrarianModify]
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAdminOrLibrarian]
+    permission_classes = [IsAdminOrLibrarianModify]
 
 
 class ShelfViewSet(viewsets.ModelViewSet):
     queryset = Shelf.objects.all()
     serializer_class = ShelfSerializer
-    permission_classes = [IsAdminOrLibrarian]
+    permission_classes = [IsAdminOrLibrarianModify]
 
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [IsAdminOrLibrarian]
+    permission_classes = [IsAdminOrLibrarianModify]

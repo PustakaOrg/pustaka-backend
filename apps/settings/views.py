@@ -1,15 +1,14 @@
 from rest_framework import generics
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
 
-from apps.profiles.permissions import IsInGroup
+from core.permissions import IsAdmin
 from .models import Settings
 from .serializers import SettingsSerializer
 
 class SettingsRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     queryset = Settings.objects.all()
     serializer_class = SettingsSerializer
-    permission_classes = [IsInGroup("Admin")]  # Optional: Require authentication
+    permission_classes = [IsAdmin] 
 
     def get_object(self):
         return Settings.objects.get_instance()
