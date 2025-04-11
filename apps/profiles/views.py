@@ -1,9 +1,22 @@
-from rest_framework import generics
+from rest_framework import generics,viewsets,status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
+from .permissions import IsInGroup
 from .models import Member, Librarian
 from .serializers import MemberSerializer, LibrarianSerializer
 
+
+
+class LibrarianViewSet(viewsets.ModelViewSet):
+    queryset = Librarian.objects.all()
+    serializer_class = LibrarianSerializer
+    permission_classes = [IsInGroup("Admin")]
+
+class MemberViewSet(viewsets.ModelViewSet):
+    queryset = Member.objects.all()
+    serializer_class = MemberSerializer
+    permission_classes = [IsInGroup("Librarian","Admin")]
 
 class ProfileView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
