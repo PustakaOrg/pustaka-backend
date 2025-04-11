@@ -47,6 +47,13 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "apps.authentication",
     "apps.profiles",
+    "apps.catalog",
+    "apps.dashboard",
+    "apps.loan",
+    "apps.printing",
+    "apps.report",
+    "apps.reservation",
+    "apps.settings"
 ]
 
 AUTH_USER_MODEL = 'authentication.User' # authentication is the app name
