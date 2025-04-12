@@ -6,15 +6,18 @@ from core.models import BaseModel
 
 class SettingsManager(models.Manager):
     def get_instance(self):
-        # Get the single instance of Settings
         settings, _ = self.get_or_create()
         return settings
 
 
 class Settings(BaseModel):
-    max_loan_day = models.PositiveSmallIntegerField(max_length=2, default=7, null=False, blank=False)
-    fine_per_lateday = models.DecimalField(max_digits=5, decimal_places=2, default=2_000, null=False, blank=False)
-    fine_for_lost = models.DecimalField(max_digits=4, decimal_places=2, default=100_000, null=False, blank=False)
+    max_loan_day = models.PositiveSmallIntegerField(default=7, null=False, blank=False)
+    fine_per_lateday = models.DecimalField(
+        max_digits=8, decimal_places=2, default=10_000, null=False, blank=False
+    )
+    fine_for_lost = models.DecimalField(
+        max_digits=9, decimal_places=2, default=100_000, null=False, blank=False
+    )
     objects = SettingsManager()
 
     def save(self, *args, **kwargs):
