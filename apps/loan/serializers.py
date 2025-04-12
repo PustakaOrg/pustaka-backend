@@ -25,7 +25,7 @@ class LoanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Loan
         fields = [
-            "id",  # Assuming you have an ID field in BaseModel
+            "id",  
             "loan_date",
             "return_date",
             "borrower",
@@ -40,7 +40,7 @@ class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = [
-            "id",  # Assuming you have an ID field in BaseModel
+            "id",  
             "accepted_by",
             "status",
         ]
@@ -55,7 +55,7 @@ class FineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Fine
         fields = [
-            "id",  # Assuming you have an ID field in BaseModel
+            "id",  
             "amount",
             "loan",
             "payment",

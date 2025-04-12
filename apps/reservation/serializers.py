@@ -17,10 +17,11 @@ class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
         fields = [
-            "id",  # Assuming you have an ID field in BaseModel
+            "id", 
             "reservation_date",
             "pickup_date",
             "reservant",
             "book",
             "accepted_by"
+            "status"
         ]
