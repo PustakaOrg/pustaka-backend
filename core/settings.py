@@ -60,7 +60,7 @@ INSTALLED_APPS = [
     "apps.settings"
 ]
 
-AUTH_USER_MODEL = 'authentication.User' # authentication is the app name
+AUTH_USER_MODEL = 'authentication.User' 
 
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
@@ -162,8 +162,11 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-MEDIA_URL = 'static/media/'
-MEDIA_ROOT =  os.path.join(BASE_DIR, 'static/media')
+MEDIA_URL = '/media/'
+if DEBUG:
+    MEDIA_ROOT="/tmp/media/" # Linux only dev
+else:
+    MEDIA_ROOT =  os.path.join(BASE_DIR, '/media/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
