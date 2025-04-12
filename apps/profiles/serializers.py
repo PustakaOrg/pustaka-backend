@@ -5,6 +5,7 @@ class MemberSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
     fullname = serializers.CharField(max_length=100)
+    profile_picture = serializers.ImageField(max_length=256, allow_empty_file=True)
 
     class Meta:
         model = Member

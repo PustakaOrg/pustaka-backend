@@ -25,7 +25,7 @@ class Book(BaseModel):
     isbn = models.CharField(
         max_length=13, null=False, blank=False, unique=True, db_index=True
     )
-    img = models.CharField(max_length=255, blank=True, null=True)
+    img = models.ImageField(upload_to="books/" ,max_length=255, blank=True, null=True)
     pages = models.PositiveSmallIntegerField(default=0)
     publish_year = models.PositiveSmallIntegerField(default=0)
     stock = models.PositiveSmallIntegerField(default=1)

@@ -7,7 +7,7 @@ class Class(BaseModel):
     name = models.CharField(max_length=4)
 
 class Member(BaseModel):
-    profile_picture = models.CharField(max_length=255, blank=True, null=True)
+    profile_picture = models.ImageField(upload_to="members/",max_length=255, blank=True, null=True)
     phone_number = models.CharField(max_length=13,blank=True,null=True)
 
     account = models.OneToOneField(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="member")

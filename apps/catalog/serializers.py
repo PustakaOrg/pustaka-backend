@@ -30,6 +30,7 @@ class BookSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True)  
     publisher = PublisherSerializer(read_only=True)  
     category = CategorySerializer(many=True, read_only=True)  
+    img = serializers.ImageField(max_length=256, allow_empty_file=True)
 
     def create(self, validated_data):
         author_data = validated_data.pop('author', None)
