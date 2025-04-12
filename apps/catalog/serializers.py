@@ -83,6 +83,7 @@ class BookSerializer(serializers.ModelSerializer):
             "id",
             "title",
             "isbn",
+            "img",
             "pages",
             "publish_year",
             "stock",
