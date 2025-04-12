@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import Member, Librarian
 
+# TODO: implement create user when creating this
+
 class MemberSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)

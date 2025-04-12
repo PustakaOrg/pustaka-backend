@@ -1,5 +1,11 @@
 from rest_framework import permissions
 
+"""
+TODO: Rework all permissions
+1. Admin only -> Settings, WA Connection
+2. Admin, Owner can edit, others read only
+3. Admin, Librarian, Owner, can edit, others read only
+"""
 
 class IsAdminOrLibrarianModify(permissions.BasePermission):
     """
