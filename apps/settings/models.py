@@ -13,8 +13,8 @@ class SettingsManager(models.Manager):
 
 class Settings(BaseModel):
     max_loan_day = models.PositiveSmallIntegerField(max_length=2, default=7, null=False, blank=False)
-    fine_per_lateday = models.FloatField(max_length=4, default=2_000, null=False, blank=False)
-    fine_for_lost = models.FloatField(max_length=4, default=100_000, null=False, blank=False)
+    fine_per_lateday = models.DecimalField(max_digits=5, decimal_places=2, default=2_000, null=False, blank=False)
+    fine_for_lost = models.DecimalField(max_digits=4, decimal_places=2, default=100_000, null=False, blank=False)
     objects = SettingsManager()
 
     def save(self, *args, **kwargs):
