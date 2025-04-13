@@ -2,6 +2,19 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import Group
 
 class AppUserManager(BaseUserManager):
+
+    def create_member_user(self, password=None, **extra_fields):
+        member_group, _ = Group.objects.get_or_create(name="Member")
+        user = self.create_user(password=password, **extra_fields)
+        user.groups.add(member_group)
+        return user
+
+    def create_librarian_user(self, password=None, **extra_fields):
+        librarian_group, _ = Group.objects.get_or_create(name="Librarian")
+        user = self.create_user(password=password, **extra_fields)
+        user.groups.add(librarian_group)
+        return user
+
     def create_user(self, password=None, **extra_fields):
         user = self.model(**extra_fields)
         user.set_password(password)
