@@ -11,6 +11,7 @@ class Loan(BaseModel):
         ("active", "Active"),
         ("returned", "Returned"),
         ("overdue", "Overdue"),
+        ("lost", "Lost")
     ]
     loan_date = models.DateTimeField()
     return_date = models.DateTimeField()
