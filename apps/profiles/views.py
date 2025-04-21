@@ -2,7 +2,7 @@ from rest_framework import generics,viewsets,status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from core.permissions import IsAdmin, IsAdminOrLibrarianOnly
+from core.permissions import IsAdmin, IsAdminOrLibrarianOnly, IsAdminOrLibrarianOrOwner
 
 from .models import Member, Librarian
 from .serializers import MemberSerializer, LibrarianSerializer
@@ -17,10 +17,10 @@ class LibrarianViewSet(viewsets.ModelViewSet):
 class MemberViewSet(viewsets.ModelViewSet):
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
-    permission_classes = [IsAdminOrLibrarianOnly]
+    permission_classes = [IsAdminOrLibrarianOrOwner]
 
 class ProfileView(generics.RetrieveUpdateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminOrLibrarianOrOwner]
     def get(self, request, *args, **kwargs):
         user = request.user
 

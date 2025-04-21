@@ -1,4 +1,4 @@
-from rest_framework import viewsets, generics
+from rest_framework import viewsets
 from .models import Author, Publisher, Category, Shelf, Book
 from .serializers import (
     AuthorSerializer,

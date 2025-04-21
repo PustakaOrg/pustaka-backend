@@ -8,7 +8,7 @@ from .serializers import LoanSerializer, PaymentSerializer, FineSerializer
 class LoanViewSet(viewsets.ModelViewSet):
     queryset = Loan.objects.all()
     serializer_class = LoanSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminOrLibrarianModify]
 
 class PaymentViewSet(viewsets.ModelViewSet):
     queryset = Payment.objects.all()

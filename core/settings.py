@@ -32,8 +32,10 @@ SECRET_KEY = "django-insecure-4z(t5!m0#^frs=ruxbp7$=_zjp#t26&3^0&tf=pu07491i(4*r
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-
+CORS_ALLOW_ALL_ORIGINS = True # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:5173",
+# ]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -42,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     "rest_framework",
     "rest_framework_simplejwt",
     "apps.authentication",
@@ -52,10 +55,10 @@ INSTALLED_APPS = [
     "apps.printing",
     "apps.report",
     "apps.reservation",
-    "apps.settings"
+    "apps.settings",
 ]
 
-AUTH_USER_MODEL = 'authentication.User' 
+AUTH_USER_MODEL = "authentication.User"
 
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
@@ -73,6 +76,7 @@ SIMPLE_JWT = {
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -156,11 +160,11 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-MEDIA_URL = '/media/'
+MEDIA_URL = "/media/"
 if DEBUG:
-    MEDIA_ROOT="/tmp/media/" # Linux only dev
+    MEDIA_ROOT = "/tmp/media/"  # Linux only dev
 else:
-    MEDIA_ROOT =  os.path.join(BASE_DIR, '/media/')
+    MEDIA_ROOT = os.path.join(BASE_DIR, "/media/")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

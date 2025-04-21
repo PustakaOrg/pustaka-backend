@@ -6,6 +6,7 @@ from apps.catalog.models import Book
 from apps.loan.models import Fine, Loan, Payment
 from apps.profiles.models import Member
 from apps.reservation.models import Reservation
+from core.permissions import IsAdminOrLibrarianOnly
 
 
 #  TODO: Try implement in RAWSQL
@@ -13,7 +14,7 @@ from apps.reservation.models import Reservation
 # TODO: implement  permission_classes
 
 @api_view()
-@permission_classes([])
+@permission_classes([IsAdminOrLibrarianOnly])
 def get_home_data(request):
     """
     Dashboard Home
@@ -37,7 +38,7 @@ def get_home_data(request):
 
 
 @api_view()
-@permission_classes([])
+@permission_classes([IsAdminOrLibrarianOnly])
 def get_loan_data(request):
     """
     Dashboard Loan
@@ -62,7 +63,7 @@ def get_loan_data(request):
 
 
 @api_view()
-@permission_classes([])
+@permission_classes([IsAdminOrLibrarianOnly])
 def get_reservation_data(request):
     """
     Dashboard Reservation
@@ -87,7 +88,7 @@ def get_reservation_data(request):
 
 
 @api_view()
-@permission_classes([])
+@permission_classes([IsAdminOrLibrarianOnly])
 def get_fines_data(request):
     """
     Fines
