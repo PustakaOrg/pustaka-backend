@@ -1,12 +1,11 @@
 from django.core.exceptions import ValidationError
 from apps.authentication.models import User
 from rest_framework import serializers
-
+from django.contrib.auth.hashers import make_password
 from apps.authentication.serializers import UserSerializer
 from .models import Class, Member, Librarian
 
 
-# TODO: Updating this is still weird
 class ClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = Class
@@ -14,86 +13,97 @@ class ClassSerializer(serializers.ModelSerializer):
 
 
 class MemberSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(write_only=True)
-    password = serializers.CharField(write_only=True)
-    fullname = serializers.CharField(write_only=True, max_length=100)
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation["account"] = UserSerializer(instance.account).data
-        return representation
+    account = UserSerializer()
+    _class = ClassSerializer()
 
     def create(self, validated_data):
-        # Account Stuff
-        email = validated_data.get("email")
-        password = validated_data.get("password")
-        fullname = validated_data.get("fullname")
+        account_data = validated_data.pop("account")
+        class_data = validated_data.pop("_class")
 
-        if User.objects.filter(email=email).exists():
-            raise ValidationError("A user with this email already exists.")
+        _class, c = Class.objects.get_or_create(name=class_data.get("name"))
 
-        member_account = User.objects.create_member_user(
-            password=password, email=email, fullname=fullname
+        user = User.objects.create_member_user(
+            fullname=account_data["fullname"],
+            email=account_data["email"],
+            password=account_data["password"],
         )
 
-        # Member Stuff
-        profile_picture = validated_data.get("profile_picture")
-        phone_number = validated_data.get("phone_number")
-        nis = validated_data.get("nis")
-        # _class = validated_data.get("class")
+        member = Member.objects.create(**validated_data, account=user, _class=_class)
 
-        new_member = Member.objects.create(
-            profile_picture=profile_picture,
-            phone_number=phone_number,
-            nis=nis,
-            account=member_account,
-            # _class=_class,
+        return member
+
+    def update(self, instance, validated_data):
+        account_data = validated_data.pop("account", None)
+        class_data = validated_data.pop("_class", None)
+        _class = ""
+
+        if class_data is not None:
+            _class, c = Class.objects.get_or_create(name=class_data.get("name"))
+            instance._class = _class
+
+        if account_data is not None:
+            account = instance.account
+            account.fullname = account_data.get("fullname", account.fullname)
+            account.email = account_data.get("email", account.email)
+            if "password" in account_data:
+                account.password = make_password(account_data["password"])
+            account.save()
+
+        instance.profile_picture = validated_data.get(
+            "profile_picture", instance.profile_picture
         )
-
-        return new_member
+        instance.phone_number = validated_data.get(
+            "phone_number", instance.phone_number
+        )
+        instance.nis = validated_data.get("nis", instance.nis)
+        instance.save()
+        return instance
 
     class Meta:
         model = Member
         fields = [
             "id",
             "profile_picture",
-            "password",
-            "email",
-            "fullname",
             "phone_number",
             "nis",
-            "class",
+            "_class",
+            "account",
         ]
 
 
 class LibrarianSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(write_only=True)
-    password = serializers.CharField(write_only=True)
-    fullname = serializers.CharField(write_only=True, max_length=100)
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation["account"] = UserSerializer(instance.account).data
-        return representation
+    account = UserSerializer()
 
     def create(self, validated_data):
-        # Account Stuff
-        email = validated_data.get("email")
-        password = validated_data.get("password")
-        fullname = validated_data.get("fullname")
+        account_data = validated_data.pop("account")
 
-        if User.objects.filter(email=email).exists():
-            raise ValidationError("A user with this email already exists.")
+        user = User.objects.create_librarian_user(
+            fullname=account_data["fullname"],
+            email=account_data["email"],
+            password=account_data["password"],
+        )
 
-        librarian_user = User.objects.create_librarian_user(password=password, email=email, fullname=fullname)
-        phone_number = validated_data.get("phone_number")
-        nip = validated_data.get("nip")
+        librarian = Librarian.objects.create(**validated_data, account=user)
+        return librarian
 
-        new_librarian = Librarian.objects.create(nip=nip,phone_number=phone_number,account=librarian_user)
-        return new_librarian
+    def update(self, instance, validated_data):
+        account_data = validated_data.pop("account", None)
 
+        if account_data is not None:
+            account = instance.account
+            account.fullname = account_data.get("fullname", account.fullname)
+            account.email = account_data.get("email", account.email)
+            if "password" in account_data:
+                account.password = make_password(account_data["password"])
+            account.save()
 
+        instance.nip = validated_data.get("nip", instance.nip)
+        instance.phone_number = validated_data.get(
+            "phone_number", instance.phone_number
+        )
+        instance.save()
+        return instance
 
     class Meta:
         model = Librarian
-        fields = ["id","email", "password", "fullname", "nip", "phone_number"]
+        fields = ["id", "nip", "phone_number"]
