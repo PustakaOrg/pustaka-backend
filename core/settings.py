@@ -18,6 +18,9 @@ from dotenv import load_dotenv
 
 load_dotenv(override=True)
 
+WAHA_BASE_URL = os.environ.get("WAHA_BASE_URL")
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
