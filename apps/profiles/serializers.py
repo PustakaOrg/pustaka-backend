@@ -106,4 +106,4 @@ class LibrarianSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Librarian
-        fields = ["id", "nip", "phone_number"]
+        fields = ["id", "nip", "phone_number", "account"]
