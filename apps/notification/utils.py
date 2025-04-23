@@ -21,6 +21,10 @@ def get_qr_code():
     raw_qr = response.json().get("value")
     return raw_qr
 
+def get_profile():
+    response = requests.get(url=f"{WAHA_BASE_URL}/api/default/profile")
+    profile = response.json()
+    return profile
 
 def send_wa(recepiant, message):
     url = f"{WAHA_BASE_URL}/api/sendText"
