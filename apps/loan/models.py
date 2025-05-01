@@ -20,7 +20,7 @@ class Loan(BaseModel):
     )
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE, related_name="loans")
     approved_by = models.ForeignKey(
-        to=Librarian, on_delete=models.DO_NOTHING, related_name="approved_loans"
+        to=Librarian, on_delete=models.DO_NOTHING, related_name="approved_loans", null=True, blank=True
     )
     return_procced_by = models.ForeignKey(
         to=Librarian,

@@ -11,10 +11,16 @@ class LoanSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation["borrower"] = MemberSerializer(instance.borrower).data
         representation["book"] = BookSerializer(instance.book).data
-        representation["approved_by"] = LibrarianSerializer(instance.approved_by).data
-        representation["return_processed_by"] = LibrarianSerializer(
-            instance.return_processed_by
-        ).data
+        representation["approved_by"] = None
+        representation["return_procced_by"] = None
+        if instance.approved_by is not None:
+            representation["approved_by"] = LibrarianSerializer(
+                instance.approved_by
+            ).data
+        if instance.return_procced_by is not None:
+            representation["return_procced_by"] = LibrarianSerializer(
+                instance.return_procced_by
+            ).data
         return representation
 
     def validate(self, data):
@@ -25,7 +31,7 @@ class LoanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Loan
         fields = [
-            "id",  
+            "id",
             "loan_date",
             "return_date",
             "borrower",
@@ -40,7 +46,7 @@ class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = [
-            "id",  
+            "id",
             "accepted_by",
             "status",
         ]
@@ -55,7 +61,7 @@ class FineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Fine
         fields = [
-            "id",  
+            "id",
             "amount",
             "loan",
             "payment",
