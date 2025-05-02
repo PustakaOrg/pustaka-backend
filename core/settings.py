@@ -32,10 +32,6 @@ SECRET_KEY = "django-insecure-4z(t5!m0#^frs=ruxbp7$=_zjp#t26&3^0&tf=pu07491i(4*r
 DEBUG = True
 
 ALLOWED_HOSTS = []
-CORS_ALLOW_ALL_ORIGINS = True # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:5173",
-# ]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -74,10 +70,15 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
 }
 
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
