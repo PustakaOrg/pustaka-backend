@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Pustaka",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

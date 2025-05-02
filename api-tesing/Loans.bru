@@ -1,0 +1,18 @@
+meta {
+  name: Loans
+  type: http
+  seq: 7
+}
+
+get {
+  url: http://127.0.0.1:8000/api/loans/
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  loan_date: 2025-05-01T00:53:35.621Z
+  return_date: 2025-05-01T00:53:35.621Z
+  borrower: 15428238-7aa2-4091-b88d-cf2e654575ce
+  book: 23fa026e-fdd3-46ca-8300-0c6add48a21e
+}

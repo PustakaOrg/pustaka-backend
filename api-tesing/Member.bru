@@ -1,0 +1,24 @@
+meta {
+  name: Member
+  type: http
+  seq: 5
+}
+
+get {
+  url: http://127.0.0.1:8000/api/members/
+  body: multipartForm
+  auth: inherit
+}
+
+params:query {
+  ~limit: 1
+}
+
+body:multipart-form {
+  email: asd@email.com
+  fullname: Member1
+  password: asd
+  nis: asdaa
+  profile_picture: @file(/home/faqih/Downloads/b77a9a64-e874-433e-9a6e-3ed9b6149807-removebg-preview.png)
+  phone_number: 12323a
+}

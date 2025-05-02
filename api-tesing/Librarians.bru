@@ -1,0 +1,19 @@
+meta {
+  name: Librarians
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://127.0.0.1:8000/api/librarians/
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  account.email: librarian1@mail.com
+  account.fullname: AAAAA
+  account.password: librarian
+  nip: L-1
+  phone_number: asds
+}

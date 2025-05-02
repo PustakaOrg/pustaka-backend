@@ -1,0 +1,15 @@
+meta {
+  name: Payments
+  type: http
+  seq: 12
+}
+
+post {
+  url: http://127.0.0.1:8000/api/payments/
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  name: Test2
+}

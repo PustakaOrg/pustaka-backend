@@ -1,0 +1,15 @@
+meta {
+  name: User
+  type: http
+  seq: 13
+}
+
+get {
+  url: http://127.0.0.1:8000/api/users/
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  name: Test2
+}

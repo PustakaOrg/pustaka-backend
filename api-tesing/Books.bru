@@ -1,0 +1,24 @@
+meta {
+  name: Books
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://127.0.0.1:8000/api/books/
+  body: multipartForm
+  auth: inherit
+}
+
+params:query {
+  ~q: Advent
+}
+
+body:multipart-form {
+  title: Learning
+  isbn: 9783161484110
+  img: @file(/home/faqih/Downloads/WA.png)
+  pages: 350
+  publish_year: 2020
+  category: Fiction
+}
