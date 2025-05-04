@@ -10,18 +10,23 @@ class ReservationSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation["reservant"] = MemberSerializer(instance.reservant).data
         representation["book"] = BookSerializer(instance.book).data
-        representation["accepted_by"] = LibrarianSerializer(instance.accepted_by).data
-        
+
+        representation["accepted_by"] = None
+        if instance.accepted_by is not None:
+            representation["accepted_by"] = LibrarianSerializer(
+                instance.accepted_by
+            ).data
+
         return representation
 
     class Meta:
         model = Reservation
         fields = [
-            "id", 
+            "id",
             "reservation_date",
             "pickup_date",
             "reservant",
             "book",
-            "accepted_by"
-            "status"
+            "accepted_by",
+            "status",
         ]
