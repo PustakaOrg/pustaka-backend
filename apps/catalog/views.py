@@ -1,4 +1,7 @@
-from rest_framework import viewsets
+from rest_framework import viewsets,filters
+from django_filters.rest_framework import  DjangoFilterBackend
+
+from apps.catalog.filters import BookFilter
 from .models import Author, Publisher, Category, Shelf, Book
 from .serializers import (
     AuthorSerializer,
@@ -40,44 +43,46 @@ class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAdminOrLibrarianModify]
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        query = self.request.query_params.get("q", None)
-        author_fullnames = self.request.query_params.getlist("author")
-        category_names = self.request.query_params.getlist("category")
-        publisher_names = self.request.query_params.getlist("publisher")
-        published_year = self.request.query_params.get("publish_year", None)
-        available = self.request.query_params.get("available", None)
-
-        filters = Q()
-
-        if query:
-            # Use Postgres FTS for improving performance
-            search_vector = SearchVector("title", "author__fullname", "isbn")
-            search_query = SearchQuery(query)
-            filters |= Q(rank__gt=0)  # This will be applied later
-
-            # Annotate the queryset with rank
-            queryset = Book.objects.annotate(
-                rank=SearchRank(search_vector, search_query)
-            ).filter(filters)  
-
-        if author_fullnames:
-            filters &= Q(
-                author__fullname__in=author_fullnames
-            )  
-        if category_names:
-            filters &= Q(category__name__in=category_names)  
-        if publisher_names:
-            filters &= Q(publisher__name__in=publisher_names)  
-        if published_year:
-            filters &= Q(publish_year=published_year)  
-        if available:
-            filters &= Q(available_stock__gt=0)
+    filterset_class = BookFilter
 
 
-        if filters:
-            queryset = queryset.filter(filters)
-        return queryset
-
+    # def get_queryset(self):
+    #     queryset = super().get_queryset()
+    #     query = self.request.query_params.get("q", None)
+    #     author_fullnames = self.request.query_params.getlist("author")
+    #     category_names = self.request.query_params.getlist("category")
+    #     publisher_names = self.request.query_params.getlist("publisher")
+    #     published_year = self.request.query_params.get("publish_year", None)
+    #     available = self.request.query_params.get("available", None)
+    #
+    #     filters = Q()
+    #
+    #     if query:
+    #         # Use Postgres FTS for improving performance
+    #         search_vector = SearchVector("title", "author__fullname", "isbn")
+    #         search_query = SearchQuery(query)
+    #         filters |= Q(rank__gt=0)  # This will be applied later
+    #
+    #         # Annotate the queryset with rank
+    #         queryset = Book.objects.annotate(
+    #             rank=SearchRank(search_vector, search_query)
+    #         ).filter(filters)  
+    #
+    #     if author_fullnames:
+    #         filters &= Q(
+    #             author__fullname__in=author_fullnames
+    #         )  
+    #     if category_names:
+    #         filters &= Q(category__name__in=category_names)  
+    #     if publisher_names:
+    #         filters &= Q(publisher__name__in=publisher_names)  
+    #     if published_year:
+    #         filters &= Q(publish_year=published_year)  
+    #     if available:
+    #         filters &= Q(available_stock__gt=0)
+    #
+    #
+    #     if filters:
+    #         queryset = queryset.filter(filters)
+    #     return queryset
+    #

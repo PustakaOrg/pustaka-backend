@@ -5,20 +5,29 @@ meta {
 }
 
 get {
-  url: http://127.0.0.1:8000/api/books/
+  url: http://127.0.0.1:8000/api/books/?shelf=123&category=Testing&author=nameger
   body: multipartForm
   auth: inherit
 }
 
 params:query {
-  ~q: Advent
+  shelf: 123
+  category: Testing
+  author: nameger
+  ~limit: 20
+  ~offset: 20
+  ~q: 9784161484115
 }
 
 body:multipart-form {
   title: Learning
-  isbn: 9783161484110
+  isbn: 9784161484115
   img: @file(/home/faqih/Downloads/WA.png)
+  stock: 1
   pages: 350
   publish_year: 2020
-  category: Fiction
+  category: bb4626f4-a8b1-46a1-a787-7b67520801f6
+  author: 9e006a92-dfda-42bd-bbea-c19edadc0ffe
+  publisher: 886edb98-dda5-412d-92a9-880a9976fa51
+  shelf: fb4a81d3-96e9-44cf-8b2a-aa1c6f001ae1
 }

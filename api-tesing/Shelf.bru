@@ -1,16 +1,15 @@
 meta {
-  name: Publishers
+  name: Shelf
   type: http
-  seq: 10
+  seq: 16
 }
 
-post {
-  url: http://127.0.0.1:8000/api/publishers/
+get {
+  url: http://127.0.0.1:8000/api/categories/
   body: multipartForm
   auth: inherit
 }
 
 body:multipart-form {
   name: Test2
-  city: Hey
 }

@@ -31,7 +31,7 @@ class Book(BaseModel):
     stock = models.PositiveSmallIntegerField(default=1)
     available_stock = models.PositiveSmallIntegerField(default=1)
     shelf = models.ForeignKey(to=Shelf, on_delete=models.SET_NULL, null=True, related_name="books")
-    category = models.ManyToManyField(to=Category, related_name="related_books")
+    category = models.ManyToManyField(to=Category, related_name="related_books", blank=True)
     author = models.ForeignKey(to=Author, on_delete=models.SET_NULL, null=True, related_name="books")
     publisher = models.ForeignKey(to=Publisher, on_delete=models.SET_NULL, null=True, related_name="books")
 
