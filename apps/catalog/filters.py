@@ -1,32 +1,31 @@
 import django_filters
-from .models import Author, Book, Category, Publisher, Shelf
-from django.contrib.postgres.search import SearchVector, SearchQuery
+from .models import  Book, Category
 
 
 class BookFilter(django_filters.FilterSet):
     category = django_filters.ModelMultipleChoiceFilter(
-        field_name="category__name",  
-        to_field_name="name",  
+        field_name="category__name",
+        to_field_name="name",
         queryset=Category.objects.all(),
     )
     author = django_filters.CharFilter(
-        field_name="author__fullname",  
-        lookup_expr="icontains",  
+        field_name="author__fullname",
+        lookup_expr="icontains",
         label="Author",
     )
     publisher = django_filters.CharFilter(
-        field_name="publisher__name",  
-        lookup_expr="icontains",  
+        field_name="publisher__name",
+        lookup_expr="icontains",
         label="Publisher",
     )
     publisher_city = django_filters.CharFilter(
-        field_name="publisher__city",  
-        lookup_expr="icontains",  
+        field_name="publisher__city",
+        lookup_expr="icontains",
         label="Publisher City",
     )
     shelf = django_filters.CharFilter(
-        field_name="shelf__code",  
-        lookup_expr="icontains",  
+        field_name="shelf__code",
+        lookup_expr="icontains",
         label="Shelf",
     )
     publish_year = django_filters.RangeFilter()
@@ -52,13 +51,7 @@ class BookFilter(django_filters.FilterSet):
                 # Exact match for ISBN
                 return queryset.filter(isbn=value)
             else:
-                # Full-text search on title
-                search_query = SearchQuery(value)
-                return queryset.annotate(search=SearchVector("title")).filter(
-                    search=search_query
-                )
-
-        return queryset
+                return queryset.filter(title__icontains=value)
 
     def filter_available(self, queryset, name, value):
         if value:
