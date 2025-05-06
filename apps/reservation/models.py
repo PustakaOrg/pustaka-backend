@@ -11,8 +11,8 @@ class Reservation(BaseModel):
         ("ready", "Ready"),
         ("completed", "Completed"),
         ("expired", "Expired"),
-
     ]
+
     reservation_date = models.DateTimeField()
     pickup_date = models.DateTimeField()
     reservant = models.ForeignKey(to=Member, on_delete=models.DO_NOTHING, related_name="reservations")
