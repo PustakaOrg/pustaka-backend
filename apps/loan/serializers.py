@@ -26,7 +26,36 @@ class LoanSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if data["return_date"] < data["loan_date"]:
             raise serializers.ValidationError("Return date must be after loan date.")
+
         return data
+
+    def create(self, validated_data):
+        book = validated_data["book"]
+
+        # Check availability before creating loan
+        if book.available_stock < 1:
+            raise serializers.ValidationError(f"Book '{book.title}' is out of stock.")
+        
+        # Deduct available stock and save the loan
+        book.available_stock -= 1
+        book.save()
+
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        book = validated_data.get("book", instance.book)
+        new_status = validated_data.get("status", instance.status)
+
+        if new_status == "returned" and instance.status != "returned":
+            book.available_stock += 1
+            book.save()
+
+        if new_status == "lost":
+            book.stock -= 1
+            book.save()
+
+        # Proceed with updating the loan object
+        return super().update(instance, validated_data)
 
     class Meta:
         model = Loan
