@@ -4,15 +4,24 @@ meta {
   seq: 7
 }
 
-get {
-  url: http://127.0.0.1:8000/api/loans/
+post {
+  url: http://127.0.0.1:8000/api/loans/?loan_date_after=2025-05-01&loan_date_before=2025-05-02
   body: multipartForm
   auth: inherit
 }
 
+params:query {
+  loan_date_after: 2025-05-01
+  loan_date_before: 2025-05-02
+  ~status: lost
+  ~borrower: 3eb4ab4b-27a7-4f43-b9fc-50c0391e1434
+  ~approved_by: 42de4220-db98-4a1d-9586-4f0e41bcfa26
+}
+
 body:multipart-form {
   loan_date: 2025-05-01T00:53:35.621Z
-  return_date: 2025-05-01T00:53:35.621Z
-  borrower: 15428238-7aa2-4091-b88d-cf2e654575ce
+  return_date: 2025-05-03T00:53:35.621Z
+  borrower: 3eb4ab4b-27a7-4f43-b9fc-50c0391e1434
   book: 23fa026e-fdd3-46ca-8300-0c6add48a21e
+  approved_by: 42de4220-db98-4a1d-9586-4f0e41bcfa26
 }
