@@ -11,7 +11,8 @@ class Loan(BaseModel):
         ("active", "Active"),
         ("returned", "Returned"),
         ("overdue", "Overdue"),
-        ("lost", "Lost")
+        ("lost", "Lost"),
+        ("done", "Done")
     ]
     loan_date = models.DateTimeField()
     return_date = models.DateTimeField()
@@ -44,7 +45,7 @@ class Payment(BaseModel):
     accepted_by = models.ForeignKey(
         to=Librarian, on_delete=models.DO_NOTHING, related_name="payments"
     )
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="active")
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
 
 
 class Fine(BaseModel):
