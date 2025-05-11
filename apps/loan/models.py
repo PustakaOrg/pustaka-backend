@@ -52,7 +52,6 @@ class Loan(BaseModel):
         super().save(*args, **kwargs)  # Call the original save method
 
 
-# TODO: When updating payment status to DOne update its Loan status to Done
 class Payment(BaseModel):
     STATUS_CHOICES = [
         ("pending", "Pending"),
@@ -66,6 +65,16 @@ class Payment(BaseModel):
         blank=True,
     )
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
+
+    def save(self, *args, **kwargs):
+        if self.pk is not None:  # Check if the object already exists
+            original = Payment.objects.get(pk=self.pk)
+            if original.status != "done" and self.status == "done":
+                if self.fines.exists():
+                    loan = self.fines.first().loan
+                    loan.status = "done"
+                    loan.save()
+        super().save(*args, **kwargs)
 
 
 class Fine(BaseModel):
