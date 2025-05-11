@@ -5,7 +5,7 @@ from apps.catalog.models import Book
 from apps.profiles.models import Librarian, Member
 from core.models import BaseModel
 
-
+# TODO: When updateing status to LOST add a fine accordingly
 class Loan(BaseModel):
     STATUS_CHOICES = [
         ("active", "Active"),
@@ -37,6 +37,7 @@ class Loan(BaseModel):
             raise ValidationError("Return date must be after load date.")
 
 
+# TODO: When updating payment status to DOne update its Loan status to Done
 class Payment(BaseModel):
     STATUS_CHOICES = [
         ("pending", "Pending"),

@@ -1,7 +1,25 @@
+from apps.loan.message import OVERDUE_FINED_MESSAGE, RETURN_DAY_REMINDER_MESSAGE
 from apps.loan.models import Fine, Loan, Payment
 from django.utils import timezone
 
 from apps.settings.models import Settings
+
+
+def create_overdue_message(loan: Loan):
+    overdue_msg = OVERDUE_FINED_MESSAGE.format(
+        borrower_name=loan.borrower.account.fullname,
+        book_title=loan.book.title,
+        fine_amount=loan.fines.first().amount,
+    )
+    return overdue_msg
+
+
+def create_return_day_reminder_message(loan: Loan):
+    reminder_msg = RETURN_DAY_REMINDER_MESSAGE.format(
+        borrower_name=loan.borrower.account.fullname,
+        book_title=loan.book.title,
+    )
+    return reminder_msg
 
 
 def get_new_overdue_loans():
@@ -27,9 +45,11 @@ def add_fine_for_new_loans(new_overdue_loans):
 def get_current_overdue_loans():
     return Loan.objects.filter(status="overdue")
 
+
 def get_today_return_day_loans():
-    today = timezone.now().date()  
+    today = timezone.now().date()
     return Loan.objects.filter(return_date=today)
+
 
 def recalculate_overdue_fine(overdue_loans):
     current_date = timezone.now().date()
