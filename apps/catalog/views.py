@@ -1,5 +1,7 @@
-from rest_framework import viewsets,filters
-from django_filters.rest_framework import  DjangoFilterBackend
+from rest_framework import viewsets, filters, response
+from django_filters.rest_framework import DjangoFilterBackend
+
+from rest_framework.decorators import action
 
 from apps.catalog.filters import BookFilter
 from .models import Author, Publisher, Category, Shelf, Book
@@ -21,10 +23,27 @@ class AuthorViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrLibrarianModify]
 
 
+
+    @action(detail=False, methods=["get"], url_path="all")
+    def all(self, request):
+        authors = Author.objects.all()
+        serialized = AuthorSerializer(authors, many=True)
+
+        return response.Response(serialized.data)
+
+
 class PublisherViewSet(viewsets.ModelViewSet):
     queryset = Publisher.objects.all()
     serializer_class = PublisherSerializer
     permission_classes = [IsAdminOrLibrarianModify]
+
+
+    @action(detail=False, methods=["get"], url_path="all")
+    def all(self, request):
+        publishers = Publisher.objects.all()
+        serialized = PublisherSerializer(publishers, many=True)
+
+        return response.Response(serialized.data)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -32,11 +51,25 @@ class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
     permission_classes = [IsAdminOrLibrarianModify]
 
+    @action(detail=False, methods=["get"], url_path="all")
+    def all(self, request):
+        categories = Category.objects.all()
+        serialized = CategorySerializer(categories, many=True)
+
+        return response.Response(serialized.data)
+
 
 class ShelfViewSet(viewsets.ModelViewSet):
     queryset = Shelf.objects.all()
     serializer_class = ShelfSerializer
     permission_classes = [IsAdminOrLibrarianModify]
+
+    @action(detail=False, methods=["get"], url_path="all")
+    def all(self, request):
+        shelves = Shelf.objects.all()
+        serialized = ShelfSerializer(shelves, many=True)
+
+        return response.Response(serialized.data)
 
 
 class BookViewSet(viewsets.ModelViewSet):
@@ -44,7 +77,6 @@ class BookViewSet(viewsets.ModelViewSet):
     serializer_class = BookSerializer
     permission_classes = [IsAdminOrLibrarianModify]
     filterset_class = BookFilter
-
 
     # def get_queryset(self):
     #     queryset = super().get_queryset()
@@ -66,18 +98,18 @@ class BookViewSet(viewsets.ModelViewSet):
     #         # Annotate the queryset with rank
     #         queryset = Book.objects.annotate(
     #             rank=SearchRank(search_vector, search_query)
-    #         ).filter(filters)  
+    #         ).filter(filters)
     #
     #     if author_fullnames:
     #         filters &= Q(
     #             author__fullname__in=author_fullnames
-    #         )  
+    #         )
     #     if category_names:
-    #         filters &= Q(category__name__in=category_names)  
+    #         filters &= Q(category__name__in=category_names)
     #     if publisher_names:
-    #         filters &= Q(publisher__name__in=publisher_names)  
+    #         filters &= Q(publisher__name__in=publisher_names)
     #     if published_year:
-    #         filters &= Q(publish_year=published_year)  
+    #         filters &= Q(publish_year=published_year)
     #     if available:
     #         filters &= Q(available_stock__gt=0)
     #

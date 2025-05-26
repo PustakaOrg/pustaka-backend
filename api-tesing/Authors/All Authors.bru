@@ -1,12 +1,12 @@
 meta {
-  name: Add Authors
+  name: All Authors
   type: http
-  seq: 4
+  seq: 2
 }
 
-post {
-  url: {{BASE_URL}}/api/authors/
-  body: json
+get {
+  url: {{BASE_URL}}/api/authors/all/
+  body: none
   auth: inherit
 }
 

@@ -1,12 +1,12 @@
 meta {
-  name: Add Publisher
+  name: All Publisher
   type: http
-  seq: 4
+  seq: 2
 }
 
-post {
-  url: {{BASE_URL}}/api/publishers/
-  body: json
+get {
+  url: {{BASE_URL}}/api/publishers/all/
+  body: none
   auth: inherit
 }
 

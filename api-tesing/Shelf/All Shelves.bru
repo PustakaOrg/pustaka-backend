@@ -1,11 +1,11 @@
 meta {
-  name: Add Shelves
+  name: All Shelves
   type: http
-  seq: 4
+  seq: 2
 }
 
-post {
-  url: {{BASE_URL}}/api/shelves/
+get {
+  url: {{BASE_URL}}/api/shelves/all/
   body: multipartForm
   auth: inherit
 }
