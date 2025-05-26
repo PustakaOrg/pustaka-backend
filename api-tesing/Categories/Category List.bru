@@ -1,12 +1,12 @@
 meta {
-  name: User
+  name: Category List
   type: http
-  seq: 13
+  seq: 2
 }
 
 get {
-  url: http://127.0.0.1:8000/api/users/
-  body: multipartForm
+  url: {{BASE_URL}}/api/categories/
+  body: none
   auth: inherit
 }
 

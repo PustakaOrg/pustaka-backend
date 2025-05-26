@@ -1,11 +1,11 @@
 meta {
-  name: Member
+  name: Add Member
   type: http
-  seq: 5
+  seq: 3
 }
 
 post {
-  url: http://127.0.0.1:8000/api/members/
+  url: {{BASE_URL}}/api/members/
   body: multipartForm
   auth: inherit
 }

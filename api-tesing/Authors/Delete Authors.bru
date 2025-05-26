@@ -1,0 +1,25 @@
+meta {
+  name: Delete Authors
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{BASE_URL}}/api/authors/:id/
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 
+}
+
+body:json {
+  {
+    "fullname": "Angela Duckworth"
+  }
+}
+
+body:multipart-form {
+  fullname: Test2
+}

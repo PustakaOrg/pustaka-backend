@@ -1,0 +1,32 @@
+meta {
+  name: Delete Reservation
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{BASE_URL}}/api/reservations/:id/
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: e5a1c97f-1626-4396-bb8c-dca52e1352fd
+}
+
+body:json {
+  {
+    "reservation_date": "2025-05-01T00:53:35.621Z",
+    "pickup_date" : "2025-05-01T00:53:35.621Z",
+    "reservant" : "15428238-7aa2-4091-b88d-cf2e654575ce",
+    "book": "4960e4ac-d794-4925-9134-ae4fd5f9f1cc",
+    "accepted_by" : ""
+  }
+}
+
+body:multipart-form {
+  reservation_date: 2025-05-01T00:53:35.621Z
+  pickup_date: 2025-05-01T00:53:35.621Z
+  reservant: c9c9a0da-a4c5-409e-b4ae-a6003d887b28
+  book: 4301fa03-6405-403a-9d3f-7aa8230c3ffe
+}

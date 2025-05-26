@@ -1,0 +1,21 @@
+meta {
+  name: Add Category
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{BASE_URL}}/api/categories/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "New Category"
+  }
+}
+
+body:multipart-form {
+  name: Test2
+}

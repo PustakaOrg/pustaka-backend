@@ -1,0 +1,27 @@
+meta {
+  name: Delete Publisher
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{BASE_URL}}/api/publishers/:id/
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 
+}
+
+body:json {
+  {
+    "name": "Some Name",
+    "city": "some city"
+  }
+}
+
+body:multipart-form {
+  name: Test2
+  city: Hey
+}

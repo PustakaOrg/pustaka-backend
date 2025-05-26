@@ -1,0 +1,25 @@
+meta {
+  name: Update Authors
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{BASE_URL}}/api/authors/:id/
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: 
+}
+
+body:json {
+  {
+    "fullname": "Angela Duckworth"
+  }
+}
+
+body:multipart-form {
+  fullname: Test2
+}

@@ -1,0 +1,27 @@
+meta {
+  name: Detail Publisher
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{BASE_URL}}/api/publishers/:id/
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: d3ffcd79-19f1-4d5e-a974-fdad19866cf4
+}
+
+body:json {
+  {
+    "name": "Some Name",
+    "city": "some city"
+  }
+}
+
+body:multipart-form {
+  name: Test2
+  city: Hey
+}

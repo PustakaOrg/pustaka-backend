@@ -1,0 +1,23 @@
+meta {
+  name: List Fines
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{BASE_URL}}/api/fines/
+  body: none
+  auth: inherit
+}
+
+body:json {
+  {
+    "ammout": 5000,
+    "loan": "0d30d57a-89ee-4563-8add-96b15edd1799",
+    "payment": ""
+  }
+}
+
+body:multipart-form {
+  name: Test2
+}

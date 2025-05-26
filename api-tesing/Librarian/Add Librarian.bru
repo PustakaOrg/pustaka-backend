@@ -1,0 +1,31 @@
+meta {
+  name: Add Librarian
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BASE_URL}}/api/librarians/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "account": {
+      "email": "librarian@librarian.com",
+      "password": "librarian",
+      "fullname": "Librarian "
+    },
+    "nip": "somenip",
+    "phone_number": "somenumber"
+  }
+}
+
+body:multipart-form {
+  account.email: librarian1@mail.com
+  account.fullname: AAAAA
+  account.password: librarian
+  nip: L-1
+  phone_number: asds
+}

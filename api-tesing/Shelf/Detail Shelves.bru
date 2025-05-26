@@ -1,0 +1,19 @@
+meta {
+  name: Detail Shelves
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{BASE_URL}}/api/shelves/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 
+}
+
+body:multipart-form {
+  code: Test2
+}

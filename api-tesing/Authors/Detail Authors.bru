@@ -1,0 +1,25 @@
+meta {
+  name: Detail Authors
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{BASE_URL}}/api/authors/:id/
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 
+}
+
+body:json {
+  {
+    "fullname": "Angela Duckworth"
+  }
+}
+
+body:multipart-form {
+  fullname: Test2
+}

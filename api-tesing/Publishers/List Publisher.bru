@@ -1,0 +1,23 @@
+meta {
+  name: List Publisher
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{BASE_URL}}/api/publishers/
+  body: none
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Some Name",
+    "city": "some city"
+  }
+}
+
+body:multipart-form {
+  name: Test2
+  city: Hey
+}

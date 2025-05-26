@@ -1,0 +1,25 @@
+meta {
+  name: Delete Category
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{BASE_URL}}/api/categories/:id/
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: bb4626f4-a8b1-46a1-a787-7b67520801f6
+}
+
+body:json {
+  {
+    "name": ""
+  }
+}
+
+body:multipart-form {
+  name: Test2
+}

@@ -1,15 +1,15 @@
 meta {
-  name: Shelf
+  name: All Categories
   type: http
-  seq: 16
+  seq: 1
 }
 
 get {
-  url: http://127.0.0.1:8000/api/shelves/
+  url: {{BASE_URL}}/api/categories/all/
   body: multipartForm
   auth: inherit
 }
 
 body:multipart-form {
-  code: Test2
+  name: Test2
 }

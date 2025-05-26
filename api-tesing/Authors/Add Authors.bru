@@ -1,0 +1,21 @@
+meta {
+  name: Add Authors
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BASE_URL}}/api/authors/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "fullname": "Angela Duckworth"
+  }
+}
+
+body:multipart-form {
+  fullname: Test2
+}

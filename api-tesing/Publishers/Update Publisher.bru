@@ -1,0 +1,27 @@
+meta {
+  name: Update Publisher
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{BASE_URL}}/api/publishers/:id/
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: 
+}
+
+body:json {
+  {
+    "name": "Some Name",
+    "city": "some city"
+  }
+}
+
+body:multipart-form {
+  name: Test2
+  city: Hey
+}

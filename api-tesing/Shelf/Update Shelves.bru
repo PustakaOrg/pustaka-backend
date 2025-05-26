@@ -1,0 +1,19 @@
+meta {
+  name: Update Shelves
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{BASE_URL}}api/shelves/:id/
+  body: multipartForm
+  auth: inherit
+}
+
+params:path {
+  id: 
+}
+
+body:multipart-form {
+  code: Test2
+}
