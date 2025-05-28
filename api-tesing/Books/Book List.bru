@@ -5,13 +5,14 @@ meta {
 }
 
 get {
-  url: {{BASE_URL}}/api/books/?offset=30
+  url: {{BASE_URL}}/api/books/?available=true
   body: none
   auth: inherit
 }
 
 params:query {
-  offset: 30
+  available: true
+  ~offset: 30
   ~category: Testing
   ~shelf: 123
   ~author: nameger

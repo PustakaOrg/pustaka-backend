@@ -2,7 +2,6 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import Group
 
 class AppUserManager(BaseUserManager):
-
     def create_member_user(self, password=None, **extra_fields):
         member_group, _ = Group.objects.get_or_create(name="Member")
         user = self.create_user(password=password, **extra_fields)

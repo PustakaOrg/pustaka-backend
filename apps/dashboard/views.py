@@ -9,10 +9,7 @@ from apps.reservation.models import Reservation
 from core.permissions import IsAdminOrLibrarianOnly
 
 
-#  TODO: Try implement in RAWSQL
 # TODO: filter for All Time, This Week, And This Month
-# TODO: implement  permission_classes
-
 @api_view()
 @permission_classes([IsAdminOrLibrarianOnly])
 def get_home_data(request):
