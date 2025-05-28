@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from apps.authentication.serializers import UserSerializer
+from apps.profiles.filters import MemberFilter
 from core.permissions import IsAdmin,  IsAdminOrLibrarianOrOwner
 
 from .models import Member, Librarian
@@ -20,6 +21,7 @@ class MemberViewSet(viewsets.ModelViewSet):
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
     permission_classes = [IsAdminOrLibrarianOrOwner]
+    filterset_class = MemberFilter
 
 
 @api_view(["GET"])
