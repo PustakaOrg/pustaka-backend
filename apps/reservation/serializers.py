@@ -24,12 +24,28 @@ class ReservationSerializer(serializers.ModelSerializer):
 
         return representation
 
+
+    def update(self, instance, validated_data):
+        new_status = validated_data.get("status", instance.status)
+        book = validated_data.get("book", instance.book)
+
+        if new_status == "ready" and instance.status != "ready":
+            book = Book.objects.select_for_update().get(pk=book.pk)
+            if book.available_stock < 1:
+                raise serializers.ValidationError(
+                    f"Book '{book.title}' is out of stock."
+                )
+            book.save()
+
+        return super().update(instance, validated_data)
+
     class Meta:
         model = Reservation
         fields = [
             "id",
             "reservation_date",
             "pickup_date",
+            "day_to_loan",
             "reservant",
             "book",
             "accepted_by",

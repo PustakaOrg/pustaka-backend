@@ -15,6 +15,7 @@ class Reservation(BaseModel):
 
     reservation_date = models.DateField()
     pickup_date = models.DateField()
+    day_to_loan = models.PositiveSmallIntegerField(default=1)
     reservant = models.ForeignKey(to=Member, on_delete=models.DO_NOTHING, related_name="reservations")
     book = models.ForeignKey(to=Book, on_delete=models.DO_NOTHING,related_name="reservations")
     accepted_by = models.ForeignKey(to=Librarian, on_delete=models.DO_NOTHING,related_name="reservations", null=True, blank=True)

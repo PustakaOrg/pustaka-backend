@@ -11,7 +11,7 @@ class SettingsManager(models.Manager):
 
 
 class Settings(BaseModel):
-    max_loan_day = models.PositiveSmallIntegerField(default=7, null=False, blank=False, max_length=2)
+    max_loan_day = models.PositiveSmallIntegerField(default=7, null=False, blank=False)
     fine_per_lateday = models.DecimalField(
         max_digits=8, decimal_places=2, default=10_000, null=False, blank=False
     )
