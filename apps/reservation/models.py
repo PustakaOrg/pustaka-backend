@@ -13,8 +13,8 @@ class Reservation(BaseModel):
         ("expired", "Expired"),
     ]
 
-    reservation_date = models.DateTimeField()
-    pickup_date = models.DateTimeField()
+    reservation_date = models.DateField()
+    pickup_date = models.DateField()
     reservant = models.ForeignKey(to=Member, on_delete=models.DO_NOTHING, related_name="reservations")
     book = models.ForeignKey(to=Book, on_delete=models.DO_NOTHING,related_name="reservations")
     accepted_by = models.ForeignKey(to=Librarian, on_delete=models.DO_NOTHING,related_name="reservations", null=True, blank=True)

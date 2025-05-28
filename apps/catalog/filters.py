@@ -1,4 +1,5 @@
 import django_filters
+from django.db.models import Q
 from .models import Book, Category
 
 
@@ -53,11 +54,11 @@ class BookFilter(django_filters.FilterSet):
         ]
 
     def filter_search(self, queryset, name, value):
-        if value:
-            if value.isdigit() and len(value) in [10, 13]:
-                return queryset.filter(isbn=value)
-            else:
-                return queryset.filter(title__icontains=value)
+        return queryset.filter(
+            Q(isbn__iexact=value)
+            | Q(title__icontains=value)
+            | Q(id__iexact=value)  # for UUID match
+        )
 
     def filter_available(self, queryset, name, value):
         if value:
