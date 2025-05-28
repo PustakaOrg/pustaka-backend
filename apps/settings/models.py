@@ -16,7 +16,7 @@ class Settings(BaseModel):
         max_digits=8, decimal_places=2, default=10_000, null=False, blank=False
     )
     fine_for_lost = models.DecimalField(
-        max_digits=9, decimal_places=2, default=100_000, null=False, blank=False
+        max_digits=10, decimal_places=2, default=100_000, null=False, blank=False
     )
     objects = SettingsManager()
 

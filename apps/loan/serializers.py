@@ -9,27 +9,26 @@ class LoanSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         """Customize the output representation."""
         representation = super().to_representation(instance)
-        representation["borrower"] = MemberSerializer(instance.borrower).data
-        representation["book"] = BookSerializer(instance.book).data
+        representation["borrower"] = MemberSerializer(instance.borrower,context=self.context).data
+        representation["book"] = BookSerializer(instance.book, context=self.context).data
         representation["approved_by"] = None
         representation["return_procced_by"] = None
         if instance.approved_by is not None:
             representation["approved_by"] = LibrarianSerializer(
-                instance.approved_by
+                instance.approved_by,
+                context=self.context
             ).data
         if instance.return_procced_by is not None:
             representation["return_procced_by"] = LibrarianSerializer(
-                instance.return_procced_by
+                instance.return_procced_by,
+                context=self.context
             ).data
         return representation
 
-    def validate(self, data):
-        if data["return_date"] < data["loan_date"]:
-            raise serializers.ValidationError("Return date must be after loan date.")
-
-        return data
 
     def create(self, validated_data):
+        if validated_data["return_date"] < validated_data["loan_date"]:
+            raise serializers.ValidationError("Return date must be after loan date.")
         book = validated_data["book"]
 
         # Check availability before creating loan
@@ -39,8 +38,9 @@ class LoanSerializer(serializers.ModelSerializer):
         # Deduct available stock and save the loan
         book.available_stock -= 1
         book.save()
-
-        return super().create(validated_data)
+        loan = super().create(validated_data)
+        print(loan)
+        return loan 
 
     def update(self, instance, validated_data):
         book = validated_data.get("book", instance.book)

@@ -15,8 +15,8 @@ class Loan(BaseModel):
         ("lost", "Lost"),
         ("done", "Done"),
     ]
-    loan_date = models.DateTimeField()
-    return_date = models.DateTimeField()
+    loan_date = models.DateField()
+    return_date = models.DateField()
     borrower = models.ForeignKey(
         to=Member, on_delete=models.DO_NOTHING, related_name="loans"
     )
@@ -43,9 +43,10 @@ class Loan(BaseModel):
 
     def save(self, *args, **kwargs):
         if self.pk is not None:
-            original = Loan.objects.get(pk=self.pk)
-            if original.status != "lost" and self.status == "lost":
+            original = Loan.objects.filter(pk=self.pk).first()
+            if original and original.status != "lost" and self.status == "lost":
                 payment = Payment()
+                payment.save()
                 fine_ammount = Settings.objects.get_instance().fine_for_lost
                 fine = Fine(amount=fine_ammount, loan=self, payment=payment)
                 fine.save()
@@ -68,8 +69,8 @@ class Payment(BaseModel):
 
     def save(self, *args, **kwargs):
         if self.pk is not None:  # Check if the object already exists
-            original = Payment.objects.get(pk=self.pk)
-            if original.status != "done" and self.status == "done":
+            original = Payment.objects.filter(pk=self.pk).first()
+            if original  and original.status != "done" and self.status == "done":
                 if self.fines.exists():
                     loan = self.fines.first().loan
                     loan.status = "done"
@@ -78,7 +79,7 @@ class Payment(BaseModel):
 
 
 class Fine(BaseModel):
-    amount = models.DecimalField(max_digits=5, decimal_places=2)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
     loan = models.ForeignKey(to=Loan, on_delete=models.CASCADE, related_name="fines")
     payment = models.ForeignKey(
         to=Payment, on_delete=models.DO_NOTHING, related_name="fines"
