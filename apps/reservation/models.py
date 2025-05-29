@@ -9,6 +9,7 @@ class Reservation(BaseModel):
     STATUS_CHOICES = [
         ("pending", "Pending"),
         ("ready", "Ready"),
+        ("canceled", "canceled"),
         ("completed", "Completed"),
         ("expired", "Expired"),
     ]
@@ -20,3 +21,4 @@ class Reservation(BaseModel):
     book = models.ForeignKey(to=Book, on_delete=models.DO_NOTHING,related_name="reservations")
     accepted_by = models.ForeignKey(to=Librarian, on_delete=models.DO_NOTHING,related_name="reservations", null=True, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
+
