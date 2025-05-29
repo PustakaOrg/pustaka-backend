@@ -84,7 +84,8 @@ class PaymentSerializer(serializers.ModelSerializer):
 class FineSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation["payment"] = PaymentSerializer(instance.payment).data
+        representation["payment"] = PaymentSerializer(instance.payment, context=self.context).data
+        representation["loan"] = LoanSerializer(instance.loan, context=self.context).data
         return representation
 
     class Meta:
