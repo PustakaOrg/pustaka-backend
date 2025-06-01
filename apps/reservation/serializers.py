@@ -36,4 +36,7 @@ class ReservationSerializer(serializers.ModelSerializer):
             "book",
             "accepted_by",
             "status",
+
+            "created_at",
+            "updated_at"
         ]
