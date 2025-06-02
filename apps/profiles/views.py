@@ -5,10 +5,10 @@ from rest_framework.response import Response
 
 from apps.authentication.serializers import UserSerializer
 from apps.profiles.filters import MemberFilter
-from core.permissions import IsAdmin,  IsAdminOrLibrarianOrOwner
+from core.permissions import IsAdmin, IsAdminOrLibrarianModify,  IsAdminOrLibrarianOrOwner
 
-from .models import Member, Librarian
-from .serializers import MemberSerializer, LibrarianSerializer
+from .models import Batch, Class, Member, Librarian
+from .serializers import BatchSerializer, ClassSerializer, MemberSerializer, LibrarianSerializer
 
 
 class LibrarianViewSet(viewsets.ModelViewSet):
@@ -22,6 +22,18 @@ class MemberViewSet(viewsets.ModelViewSet):
     serializer_class = MemberSerializer
     permission_classes = [IsAdminOrLibrarianOrOwner]
     filterset_class = MemberFilter
+
+class ClassViewSet(viewsets.ModelViewSet):
+    queryset = Class.objects.all()
+    serializer_class = ClassSerializer
+    permission_classes = [IsAdminOrLibrarianModify]
+
+
+class BatchViewSet(viewsets.ModelViewSet):
+    queryset = Batch.objects.all()
+    serializer_class = BatchSerializer
+    permission_classes = [IsAdminOrLibrarianModify]
+    
 
 
 @api_view(["GET"])

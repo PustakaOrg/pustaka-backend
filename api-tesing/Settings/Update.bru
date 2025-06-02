@@ -1,0 +1,18 @@
+meta {
+  name: Update
+  type: http
+  seq: 2
+}
+
+patch {
+  url: {{BASE_URL}}/api/settings/
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+    max_loan_day: 7
+  fine_per_lateday: 1500
+  fine_for_lost: 50000
+  member_card_background: @file(/home/faqih/Documents/Projects/ta-test-print/member.png)
+}

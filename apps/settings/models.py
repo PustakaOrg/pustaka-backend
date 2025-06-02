@@ -18,6 +18,7 @@ class Settings(BaseModel):
     fine_for_lost = models.DecimalField(
         max_digits=10, decimal_places=2, default=100_000, null=False, blank=False
     )
+    member_card_background = models.ImageField(upload_to="settings/",max_length=255, blank=True, null=True)
     objects = SettingsManager()
 
     def save(self, *args, **kwargs):

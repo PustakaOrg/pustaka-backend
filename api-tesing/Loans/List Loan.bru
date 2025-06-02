@@ -5,9 +5,13 @@ meta {
 }
 
 get {
-  url: {{BASE_URL}}/api/loans/
+  url: {{BASE_URL}}/api/loans/?limit=999
   body: none
   auth: inherit
+}
+
+params:query {
+  limit: 999
 }
 
 body:multipart-form {

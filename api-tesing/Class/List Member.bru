@@ -1,25 +1,26 @@
 meta {
-  name: Add Member
+  name: List Member
   type: http
-  seq: 3
+  seq: 1
 }
 
-post {
+get {
   url: {{BASE_URL}}/api/members/
-  body: multipartForm
+  body: none
   auth: inherit
 }
 
 params:query {
-  ~limit: 1
+  ~limit: 
+  ~offset: 
 }
 
 body:multipart-form {
-  account.email: member12@member.com
+  account.email: member123@member.com
   account.fullname: Member1
   account.password: member
-  nis: 12
+  nis: 1
   profile_picture: @file(/home/faqih/Downloads/b77a9a64-e874-433e-9a6e-3ed9b6149807-removebg-preview.png)
   phone_number: 12323a
-  _class.name: B
+  _class.name: A
 }

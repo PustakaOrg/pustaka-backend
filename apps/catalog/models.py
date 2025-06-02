@@ -4,7 +4,7 @@ from core.models import BaseModel
 
 
 class Author(BaseModel):
-    fullname = models.CharField(max_length=50)
+    fullname = models.CharField(max_length=50, unique=True)
 
 
 class Publisher(BaseModel):
@@ -13,11 +13,11 @@ class Publisher(BaseModel):
 
 
 class Category(BaseModel):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=20, unique=True)
 
 
 class Shelf(BaseModel):
-    code = models.CharField(max_length=10)
+    code = models.CharField(max_length=10, unique=True)
 
 
 class Book(BaseModel):

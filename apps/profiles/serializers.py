@@ -3,12 +3,17 @@ from apps.authentication.models import User
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 from apps.authentication.serializers import UserSerializer
-from .models import Class, Member, Librarian
+from .models import Batch, Class, Member, Librarian
 
 
 class ClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = Class
+        fields = ["id", "name"]
+
+class BatchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Batch
         fields = ["id", "name"]
 
 
