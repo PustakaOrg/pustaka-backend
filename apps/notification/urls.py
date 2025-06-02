@@ -10,6 +10,6 @@ from apps.notification.views import (
 urlpatterns = [
     path("wa/status/", check_status_view, name="wa-check-status"),
     path("wa/qr/", get_qr_view, name="wa-qr"),
-    path("wa/disconnect", disconnect_view, name="wa-disconnect"),
-    path("wa/profile", profile_view, name="wa-profile"),
+    path("wa/disconnect/", disconnect_view, name="wa-disconnect"),
+    path("wa/profile/", profile_view, name="wa-profile"),
 ]

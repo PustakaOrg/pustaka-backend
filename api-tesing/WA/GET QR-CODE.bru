@@ -1,0 +1,15 @@
+meta {
+  name: GET QR-CODE
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{BASE_URL}}/api/wa/qr/
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  name: Test2
+}
