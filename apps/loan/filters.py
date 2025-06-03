@@ -1,3 +1,4 @@
+from django.utils import choices
 import django_filters
 
 from apps.loan.models import Fine, Loan, Payment
@@ -9,6 +10,7 @@ class FineFilters(BaseFilter):
     status = django_filters.ChoiceFilter(
         field_name="payment__status", choices=Payment.STATUS_CHOICES
     )
+    loan_status = django_filters.ChoiceFilter(field_name="loan__status", choices=Loan.STATUS_CHOICES)
     accepted_by = django_filters.ModelChoiceFilter(
         field_name="payment__accepted_by", queryset=Librarian.objects.all()
     )

@@ -4,12 +4,13 @@ meta {
   seq: 1
 }
 
-post {
+patch {
   url: http://127.0.0.1:8000/api/payments/
   body: multipartForm
   auth: inherit
 }
 
 body:multipart-form {
-  name: Test2
+  accepted_by: 
+  status: 
 }

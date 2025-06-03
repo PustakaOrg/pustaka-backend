@@ -1,0 +1,19 @@
+meta {
+  name: Add
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BASE_URL}}/api/batches/
+  body: multipartForm
+  auth: inherit
+}
+
+params:query {
+  ~limit: 1
+}
+
+body:multipart-form {
+  name: A
+}

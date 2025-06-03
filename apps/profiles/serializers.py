@@ -73,6 +73,8 @@ class MemberSerializer(serializers.ModelSerializer):
             "nis",
             "_class",
             "account",
+            "batch",
+            "expires_date"
         ]
 
 

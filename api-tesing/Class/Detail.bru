@@ -1,17 +1,21 @@
 meta {
-  name: Add Member
+  name: Detail
   type: http
-  seq: 3
+  seq: 2
 }
 
-post {
-  url: {{BASE_URL}}/api/members/
-  body: multipartForm
+get {
+  url: {{BASE_URL}}/api/classes/:id/
+  body: none
   auth: inherit
 }
 
 params:query {
   ~limit: 1
+}
+
+params:path {
+  id: 
 }
 
 body:multipart-form {

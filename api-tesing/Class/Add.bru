@@ -1,17 +1,17 @@
 meta {
-  name: Delete Member
+  name: Add
   type: http
-  seq: 5
+  seq: 3
 }
 
-delete {
-  url: {{BASE_URL}}/api/members/:id/
-  body: none
+post {
+  url: {{BASE_URL}}/api/classes/
+  body: multipartForm
   auth: inherit
 }
 
-params:path {
-  id: a1ff4a8c-401c-4f69-91ed-26f42cefc71c
+params:query {
+  ~limit: 1
 }
 
 body:multipart-form {

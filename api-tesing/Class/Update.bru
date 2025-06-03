@@ -1,0 +1,29 @@
+meta {
+  name: Update
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{BASE_URL}}/api/classes/:id/
+  body: multipartForm
+  auth: inherit
+}
+
+params:query {
+  ~limit: 1
+}
+
+params:path {
+  id: 
+}
+
+body:multipart-form {
+  account.email: member123@member.com
+  account.fullname: Member1
+  account.password: member
+  nis: 1
+  profile_picture: @file(/home/faqih/Downloads/b77a9a64-e874-433e-9a6e-3ed9b6149807-removebg-preview.png)
+  phone_number: 12323a
+  _class.name: A
+}

@@ -1,18 +1,17 @@
 meta {
-  name: List Member
+  name: Delete
   type: http
-  seq: 1
+  seq: 5
 }
 
-get {
-  url: {{BASE_URL}}/api/classes/
+delete {
+  url: {{BASE_URL}}/api/classes/:id/
   body: none
   auth: inherit
 }
 
-params:query {
-  ~limit: 
-  ~offset: 
+params:path {
+  id: a1ff4a8c-401c-4f69-91ed-26f42cefc71c
 }
 
 body:multipart-form {
