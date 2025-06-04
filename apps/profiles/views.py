@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from apps.authentication.serializers import UserSerializer
-from apps.profiles.filters import MemberFilter
+from apps.profiles.filters import BatchFilter, ClassFilter, MemberFilter
 from core.permissions import IsAdmin, IsAdminOrLibrarianModify,  IsAdminOrLibrarianOrOwner
 
 from .models import Batch, Class, Member, Librarian
@@ -27,12 +27,14 @@ class ClassViewSet(viewsets.ModelViewSet):
     queryset = Class.objects.all()
     serializer_class = ClassSerializer
     permission_classes = [IsAdminOrLibrarianModify]
+    filterset_class = ClassFilter
 
 
 class BatchViewSet(viewsets.ModelViewSet):
     queryset = Batch.objects.all()
     serializer_class = BatchSerializer
     permission_classes = [IsAdminOrLibrarianModify]
+    filterset_class = BatchFilter
     
 
 

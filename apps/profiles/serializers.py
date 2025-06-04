@@ -19,13 +19,10 @@ class BatchSerializer(serializers.ModelSerializer):
 
 class MemberSerializer(serializers.ModelSerializer):
     account = UserSerializer()
-    _class = ClassSerializer()
 
     def create(self, validated_data):
         account_data = validated_data.pop("account")
-        class_data = validated_data.pop("_class")
 
-        _class, c = Class.objects.get_or_create(name=class_data.get("name"))
 
         user = User.objects.create_member_user(
             fullname=account_data["fullname"],
@@ -33,18 +30,12 @@ class MemberSerializer(serializers.ModelSerializer):
             password=account_data["password"],
         )
 
-        member = Member.objects.create(**validated_data, account=user, _class=_class)
+        member = Member.objects.create(**validated_data, account=user)
 
         return member
 
     def update(self, instance, validated_data):
         account_data = validated_data.pop("account", None)
-        class_data = validated_data.pop("_class", None)
-        _class = ""
-
-        if class_data is not None:
-            _class, c = Class.objects.get_or_create(name=class_data.get("name"))
-            instance._class = _class
 
         if account_data is not None:
             account = instance.account
@@ -63,6 +54,22 @@ class MemberSerializer(serializers.ModelSerializer):
         instance.nis = validated_data.get("nis", instance.nis)
         instance.save()
         return instance
+
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        single_fields = [
+            ("_class", ClassSerializer),
+            ("batch", BatchSerializer),
+        ]
+
+        for field, serializer in single_fields:
+            value = getattr(instance, field, None)
+            if value is not None:
+                representation[field] = serializer(value).data
+
+        return representation
+
 
     class Meta:
         model = Member

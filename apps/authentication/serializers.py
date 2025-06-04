@@ -1,9 +1,17 @@
 from rest_framework import serializers
 
 from apps.authentication.models import User
-
+from django.core.exceptions import ValidationError as DjangoValidationError
+from django.contrib.auth.password_validation import validate_password as django_validate_password
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+
+    # def validate_password(self, value):
+    #     try:
+    #         django_validate_password(value)
+    #     except DjangoValidationError as e:
+    #         raise serializers.ValidationError(e.messages)
+    #     return value
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

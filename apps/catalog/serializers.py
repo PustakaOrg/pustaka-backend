@@ -58,7 +58,6 @@ class BookSerializer(serializers.ModelSerializer):
             ("author", AuthorSerializer),
             ("publisher", PublisherSerializer),
         ]
-        print(instance)
 
         for field, serializer in single_fields:
             value = getattr(instance, field, None)
