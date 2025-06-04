@@ -17,12 +17,15 @@ class ReservationFilters(BaseFilter):
             | Q(reservant__account__fullname__icontains=value)
             | Q(reservant__id__iexact=value)
             | Q(reservant__nis__iexact=value)
+            | Q(book__title__icontains=value)
+            | Q(book__id__iexact=value)
         )
 
     class Meta:
         model = Reservation
         fields = [
             "status",
+            "q",
             "reservation_date",
             "pickup_date",
             "reservant",
