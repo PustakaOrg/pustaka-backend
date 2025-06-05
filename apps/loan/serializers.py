@@ -68,7 +68,6 @@ class LoanSerializer(serializers.ModelSerializer):
             "approved_by",
             "return_procced_by",
             "status",
-
             "created_at",
             "updated_at"
         ]

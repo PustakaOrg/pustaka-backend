@@ -12,6 +12,18 @@ class IsAdminOrLibrarianModify(permissions.BasePermission):
         return False
 
 
+class IsAdminModify(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        if request.user and request.user.is_authenticated:
+            return request.user.groups.filter(name__in=["Admin"]).exists()
+
+        return False
+
+
+
 class IsAdmin(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.user and request.user.is_authenticated:

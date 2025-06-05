@@ -1,14 +1,14 @@
 from rest_framework import generics
 from rest_framework.response import Response
 
-from core.permissions import IsAdmin
+from core.permissions import IsAdmin, IsAdminModify
 from .models import Settings
 from .serializers import SettingsSerializer
 
 class SettingsRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     queryset = Settings.objects.all()
     serializer_class = SettingsSerializer
-    permission_classes = [IsAdmin] 
+    permission_classes = [IsAdminModify] 
 
     def get_object(self):
         return Settings.objects.get_instance()
