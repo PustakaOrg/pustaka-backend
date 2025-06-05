@@ -58,7 +58,8 @@ INSTALLED_APPS = [
     "apps.report",
     "apps.reservation",
     "apps.settings",
-    "apps.notification"
+    "apps.notification",
+    "apps.activity"
 ]
 
 AUTH_USER_MODEL = "authentication.User"

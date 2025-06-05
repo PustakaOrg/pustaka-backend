@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from apps.activity.methods import log_activity
 from apps.catalog.models import Book
 from apps.catalog.serializers import BookSerializer
 from apps.profiles.serializers import LibrarianSerializer, MemberSerializer
@@ -25,6 +26,13 @@ class ReservationSerializer(serializers.ModelSerializer):
         return representation
 
 
+    def create(self, validated_data):
+        reservation = super().create(validated_data)
+
+        log_activity("reserved", f"{reservation.reservant.account.full} mereservasi {reservation.book.title}")
+        return reservation
+
+
     class Meta:
         model = Reservation
         fields = [
@@ -36,7 +44,6 @@ class ReservationSerializer(serializers.ModelSerializer):
             "book",
             "accepted_by",
             "status",
-
             "created_at",
             "updated_at"
         ]

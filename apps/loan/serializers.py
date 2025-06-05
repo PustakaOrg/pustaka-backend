@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from apps.activity.methods import log_activity
 from apps.catalog.serializers import BookSerializer
 from apps.profiles.serializers import LibrarianSerializer, MemberSerializer
 from .models import Loan, Payment, Fine
@@ -31,31 +32,33 @@ class LoanSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Return date must be after loan date.")
         book = validated_data["book"]
 
-        # Check availability before creating loan
         if book.available_stock < 1:
             raise serializers.ValidationError(f"Book '{book.title}' is out of stock.")
         
-        # Deduct available stock and save the loan
         book.available_stock -= 1
         book.save()
         loan = super().create(validated_data)
-        print(loan)
+        log_activity("borrowed", f"{loan.borrower.account.fullname} meminjam {loan.book.title}")
+
         return loan 
+
 
     def update(self, instance, validated_data):
         book = validated_data.get("book", instance.book)
-        new_status = validated_data.get("status", instance.status)
+        previous_status = instance.status  
 
-        if new_status == "returned" and instance.status != "returned":
+        loan = super().update(instance, validated_data)
+
+        if loan.status == "returned" and previous_status != "returned":
             book.available_stock += 1
             book.save()
+            log_activity("returned", f"{loan.borrower.account.fullname} mengembalikan {loan.book.title}")
 
-        if new_status == "lost":
+        if loan.status == "lost" and previous_status != "lost":
             book.stock -= 1
             book.save()
 
-        # Proceed with updating the loan object
-        return super().update(instance, validated_data)
+        return loan
 
     class Meta:
         model = Loan
@@ -74,6 +77,18 @@ class LoanSerializer(serializers.ModelSerializer):
 
 
 class PaymentSerializer(serializers.ModelSerializer):
+    def update(self, instance, validated_data):
+        original_status = instance.status
+        payment = super().update(instance, validated_data)
+
+        if original_status != "done" and payment.status == "done":
+            loan = payment.fines.first().loan if payment.fines.exists() else None
+            if loan:
+                log_activity("payment_done", f"Pembayaran Denda oleh {loan.borrower.account.fullname}" )
+        return payment
+
+
+
     class Meta:
         model = Payment
         fields = [
@@ -81,6 +96,7 @@ class PaymentSerializer(serializers.ModelSerializer):
             "accepted_by",
             "status",
         ]
+
 
 
 class FineSerializer(serializers.ModelSerializer):
