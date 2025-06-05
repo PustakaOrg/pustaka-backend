@@ -29,7 +29,7 @@ class ReservationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         reservation = super().create(validated_data)
 
-        log_activity("reserved", f"{reservation.reservant.account.full} mereservasi {reservation.book.title}")
+        log_activity("reserved", f"{reservation.reservant.account.fullname} mereservasi {reservation.book.title}")
         return reservation
 
 
