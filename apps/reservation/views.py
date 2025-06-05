@@ -11,3 +11,12 @@ class ReservationViewset(viewsets.ModelViewSet):
     permission_classes  = [IsAuthenticated]
     filterset_class = ReservationFilters
 
+    def get_queryset(self):
+        request = self.request
+        queryset = super().get_queryset()
+
+        if request.user.groups.filter(name__in=["Member"]).exists():
+            return queryset.filter(reservant__account=request.user)
+
+        return super().get_queryset()
+

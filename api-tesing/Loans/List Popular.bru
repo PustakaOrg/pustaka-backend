@@ -1,0 +1,23 @@
+meta {
+  name: List Popular
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{BASE_URL}}/api/loans/?limit=999
+  body: none
+  auth: inherit
+}
+
+params:query {
+  limit: 999
+}
+
+body:multipart-form {
+  loan_date: 2025-05-01T00:53:35.621Z
+  return_date: 2025-05-03T00:53:35.621Z
+  borrower: 3eb4ab4b-27a7-4f43-b9fc-50c0391e1434
+  book: 23fa026e-fdd3-46ca-8300-0c6add48a21e
+  approved_by: 42de4220-db98-4a1d-9586-4f0e41bcfa26
+}
