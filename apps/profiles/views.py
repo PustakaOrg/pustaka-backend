@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from apps.authentication.serializers import UserSerializer
 from apps.profiles.filters import BatchFilter, ClassFilter, MemberFilter
-from core.permissions import IsAdmin, IsAdminOrLibrarianModify,  IsAdminOrLibrarianOrOwner
+from core.permissions import  IsAdminOrLibrarianModify,  IsAdminOrLibrarianOrOwner, IsAdminOrOwner
 
 from .models import Batch, Class, Member, Librarian
 from .serializers import BatchSerializer, ClassSerializer, MemberSerializer, LibrarianSerializer
@@ -14,7 +14,7 @@ from .serializers import BatchSerializer, ClassSerializer, MemberSerializer, Lib
 class LibrarianViewSet(viewsets.ModelViewSet):
     queryset = Librarian.objects.all()
     serializer_class = LibrarianSerializer
-    permission_classes = [IsAdmin]
+    permission_classes = [IsAdminOrOwner]
 
 
 class MemberViewSet(viewsets.ModelViewSet):
@@ -44,7 +44,8 @@ def profile_view(request):
     user = request.user
     try:
         member = user.member
-        serializer = MemberSerializer(member)
+        context = {'request': request}
+        serializer = MemberSerializer(member,context=context)
         return Response(serializer.data)
     except Member.DoesNotExist:
         pass

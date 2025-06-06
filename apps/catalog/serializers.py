@@ -89,7 +89,6 @@ class BookSerializer(serializers.ModelSerializer):
             "category",
             "author",
             "publisher",
-
             "created_at",
             "updated_at"
         ]
