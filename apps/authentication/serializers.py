@@ -3,6 +3,7 @@ from rest_framework import serializers
 from apps.authentication.models import User
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.contrib.auth.password_validation import validate_password as django_validate_password
+
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
@@ -18,6 +19,16 @@ class UserSerializer(serializers.ModelSerializer):
         first_group = instance.groups.first()
         representation["group"] =  first_group.name if first_group else None
         return representation
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop("password", None)
+        instance = super().update(instance, validated_data)
+
+        if password:
+            instance.set_password(password)
+            instance.save()
+
+        return instance
 
     class Meta:
         model = User
