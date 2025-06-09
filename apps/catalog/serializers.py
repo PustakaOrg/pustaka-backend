@@ -30,7 +30,7 @@ class BookSerializer(serializers.ModelSerializer):
     category = serializers.PrimaryKeyRelatedField(
         many=True, queryset=Category.objects.all()
     )
-    img = serializers.ImageField(max_length=256, allow_empty_file=True)
+    img = serializers.ImageField(max_length=256, required=False)
 
     def create(self, validated_data):
         category_data = validated_data.pop("category",[])

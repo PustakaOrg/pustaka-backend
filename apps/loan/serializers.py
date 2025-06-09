@@ -14,9 +14,10 @@ class PopularBookSerializer(serializers.ModelSerializer):
         model = Book
         fields = [
             "id",
-            "img",
+            # "img",
             "title",
-            "author",
+            "isbn",
+            # "author",
             "loan_count",
         ]  
 

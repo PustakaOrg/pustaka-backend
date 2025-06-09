@@ -16,16 +16,24 @@ from apps.notification.utils import send_wa
 
 
 @db_periodic_task(crontab(hour="1"))
+def process_new_ovedue_loan_task():
+    process_new_ovedue_loan()
+
 def process_new_ovedue_loan():
     new_overdue_loans = get_new_overdue_loans()
+    print("here it is", new_overdue_loans)
     if not new_overdue_loans:
         return
     add_fine_for_new_loans(new_overdue_loans)
 
 
 @db_periodic_task(crontab(hour="5"))
+def remind_return_loan_task():
+    remind_return_loan()
+
 def remind_return_loan():
     today_return_loans = get_today_return_day_loans()
+    print("HERE",today_return_loans)
     if not today_return_loans:
         return
     for loan in today_return_loans:
@@ -36,6 +44,9 @@ def remind_return_loan():
 
 
 @db_periodic_task(crontab(hour="6"))
+def process_overdue_loan_task():
+    process_overdue_loan()
+
 def process_overdue_loan():
     overdue_loans = get_current_overdue_loans()
     if not overdue_loans:
