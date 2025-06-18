@@ -19,6 +19,7 @@ class ReservationFilters(BaseFilter):
             | Q(reservant__nis__iexact=value)
             | Q(book__title__icontains=value)
             | Q(book__id__iexact=value)
+            | Q(book__isbn__iexact=value)
         )
 
     class Meta:

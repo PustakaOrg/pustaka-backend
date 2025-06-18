@@ -25,6 +25,7 @@ class FineFilters(BaseFilter):
             | Q(loan__borrower__nis__iexact=value)
             | Q(loan__book__title__icontains=value)
             | Q(loan__book__id__iexact=value)
+            | Q(book__isbn__iexact=value)
         )
 
 
@@ -46,6 +47,7 @@ class LoanFilters(BaseFilter):
             | Q(borrower__nis__iexact=value)
             | Q(book__title__icontains=value)
             | Q(book__id__iexact=value)
+            | Q(book__isbn__iexact=value)
         )
 
 
