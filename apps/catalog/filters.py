@@ -6,9 +6,7 @@ from .models import Book, Category
 class BookFilter(django_filters.FilterSet):
     category = django_filters.BaseInFilter(
         field_name="category__name",
-        # to_field_name="name",
         lookup_expr="in",
-        # queryset=Category.objects.all(),
     )
     author = django_filters.CharFilter(
         field_name="author__fullname",

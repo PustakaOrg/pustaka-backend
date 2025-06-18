@@ -1,7 +1,8 @@
-from rest_framework import viewsets, filters, response
+from rest_framework import viewsets, filters, response, status
 from django_filters.rest_framework import DjangoFilterBackend
-
+import pandas as pd
 from rest_framework.decorators import action
+from django.db import transaction
 
 from apps.catalog.filters import BookFilter
 from .models import Author, Publisher, Category, Shelf, Book
@@ -22,8 +23,6 @@ class AuthorViewSet(viewsets.ModelViewSet):
     serializer_class = AuthorSerializer
     permission_classes = [IsAdminOrLibrarianModify]
 
-
-
     @action(detail=False, methods=["get"], url_path="all")
     def all(self, request):
         authors = Author.objects.all()
@@ -36,7 +35,6 @@ class PublisherViewSet(viewsets.ModelViewSet):
     queryset = Publisher.objects.all()
     serializer_class = PublisherSerializer
     permission_classes = [IsAdminOrLibrarianModify]
-
 
     @action(detail=False, methods=["get"], url_path="all")
     def all(self, request):
@@ -78,43 +76,76 @@ class BookViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrLibrarianModify]
     filterset_class = BookFilter
 
-    # def get_queryset(self):
-    #     queryset = super().get_queryset()
-    #     query = self.request.query_params.get("q", None)
-    #     author_fullnames = self.request.query_params.getlist("author")
-    #     category_names = self.request.query_params.getlist("category")
-    #     publisher_names = self.request.query_params.getlist("publisher")
-    #     published_year = self.request.query_params.get("publish_year", None)
-    #     available = self.request.query_params.get("available", None)
-    #
-    #     filters = Q()
-    #
-    #     if query:
-    #         # Use Postgres FTS for improving performance
-    #         search_vector = SearchVector("title", "author__fullname", "isbn")
-    #         search_query = SearchQuery(query)
-    #         filters |= Q(rank__gt=0)  # This will be applied later
-    #
-    #         # Annotate the queryset with rank
-    #         queryset = Book.objects.annotate(
-    #             rank=SearchRank(search_vector, search_query)
-    #         ).filter(filters)
-    #
-    #     if author_fullnames:
-    #         filters &= Q(
-    #             author__fullname__in=author_fullnames
-    #         )
-    #     if category_names:
-    #         filters &= Q(category__name__in=category_names)
-    #     if publisher_names:
-    #         filters &= Q(publisher__name__in=publisher_names)
-    #     if published_year:
-    #         filters &= Q(publish_year=published_year)
-    #     if available:
-    #         filters &= Q(available_stock__gt=0)
-    #
-    #
-    #     if filters:
-    #         queryset = queryset.filter(filters)
-    #     return queryset
-    #
+    @action(detail=False, methods=["post"], url_path="import")
+    def import_books(self, request):
+        if "file" not in request.FILES:
+            return response.Response(
+                {"detail": "No file provided."}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        csv_file = request.FILES["file"]
+
+        if not csv_file.name.endswith(".csv"):
+            return response.Response(
+                {"detail": "File is not a CSV."}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            df = pd.read_csv(csv_file)
+
+            created_count = 0
+            skipped_count = 0
+            error_rows = []
+
+            with transaction.atomic():
+                for index, row in df.iterrows():
+                    try:
+                        isbn = str(row["ISBN"]).strip()
+
+                        if Book.objects.filter(isbn=isbn).exists():
+                            skipped_count += 1
+                            continue
+
+                        author, _ = Author.objects.get_or_create(
+                            fullname=row["Pengarang"].strip()
+                        )
+                        publisher, _ = Publisher.objects.get_or_create(
+                            name=row["Penerbit"].strip()
+                        )
+                        category, _ = Category.objects.get_or_create(
+                            name=row["Kategori"].strip()
+                        )
+                        shelf, _ = Shelf.objects.get_or_create(code=row["Rak"].strip())
+
+                        book = Book.objects.create(
+                            isbn=isbn,
+                            title=row["Judul"].strip(),
+                            publish_year=int(row["Tahun Terbit"]),
+                            stock=int(row["Jumlah"]),
+                            available_stock=int(row["Jumlah"]),
+                            author=author,
+                            publisher=publisher,
+                            shelf=shelf,
+                        )
+
+                        book.category.add(category)
+                        created_count += 1
+
+                    except Exception as e:
+                        error_rows.append({"row_index": index, "error": str(e)})
+                        skipped_count += 1
+
+            return response.Response(
+                {
+                    "detail": "Import completed.",
+                    "created": created_count,
+                    "skipped": skipped_count,
+                    "errors": error_rows,
+                },
+                status=status.HTTP_201_CREATED,
+            )
+
+        except Exception as e:
+            return response.Response(
+                {"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST
+            )

@@ -1,0 +1,135 @@
+meta {
+  name: Import
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{BASE_URL}}/api/books/
+  body: multipartForm
+  auth: inherit
+}
+
+params:query {
+  ~category: Testing
+  ~shelf: 123
+  ~author: nameger
+  ~publisher: Test2
+  ~publish_year_max: 2020
+  ~limit: 20
+  ~offset: 20
+  ~q: Great
+  ~publish_year_min: 2000
+  ~category: Test2
+}
+
+body:multipart-form {
+  title: Learning Opportunity
+  isbn: 9784161484128
+  img: @file(/home/faqih/Downloads/WA.png)
+  stock: 1
+  pages: 350
+  publish_year: 2020
+  author: 9e006a92-dfda-42bd-bbea-c19edadc0ffe
+  publisher: 886edb98-dda5-412d-92a9-880a9976fa51
+  shelf: fb4a81d3-96e9-44cf-8b2a-aa1c6f001ae1
+  category: 2793a3bf-1428-4f2a-95da-7e5b989745b4
+  category: bb4626f4-a8b1-46a1-a787-7b67520801f6
+}
+
+docs {
+  # 📚 Books API
+  
+  **Base URL**: `http://127.0.0.1:8000/api/books/`
+  
+  ---
+  
+  ## 🔍 GET `/api/books/`
+  
+  ### **Description**
+  
+  This endpoint retrieves a list of books based on query filters. It supports searching by ISBN, title, and various filters like category, shelf, author, publisher, and publication year.
+  
+  ### **Query Parameters**
+  
+  | Parameter          | Type    | Description                                                 |
+  | ------------------ | ------- | ----------------------------------------------------------- |
+  | `q`                | string  | Search term (fuzzy match on `title`, exact match on `isbn`) |
+  | `category`         | string  | Filter by category name (can add more than 1)                                     |
+  | `shelf`            | UUID    | Filter by Shelf ID                                          |
+  | `author`           | string  | Filter by Author name                                       |
+  | `publisher`        | string  | Filter by Publisher name                                    |
+  | `publish_year_min` | integer | Minimum publish year                                        |
+  | `publish_year_max` | integer | Maximum publish year                                        |
+  | `limit`            | integer | Pagination limit (default: 20)                              |
+  | `offset`           | integer | Pagination offset                                           |
+  
+  
+  ### **Example Request**
+  
+  ```http
+  GET /api/books/?category=Testing&shelf=123&author=nameger&publisher=Test2&publish_year_max=2020
+  ```
+  
+  ### **Example Response**
+  
+  ```json
+  [
+    {
+      "title": "Learning",
+      "isbn": "9784161484112",
+      "img": "http://127.0.0.1/media/books/WA.png",
+      "stock": 1,
+      "pages": 350,
+      "publish_year": 2020,
+      "author": "nameger",
+      "publisher": "Test2",
+      "shelf": "fb4a81d3-96e9-44cf-8b2a-aa1c6f001ae1",
+      "category": "2793a3bf-1428-4f2a-95da-7e5b989745b4"
+    }
+  ]
+  ```
+  
+  ---
+  
+  ## 📥 POST `/api/books/`
+  
+  ### **Request Body**
+  
+  **Content-Type**: `multipart/form-data`
+  
+  | Field          | Type    | Required | Description            |
+  | -------------- | ------- | -------- | ---------------------- |
+  | `title`        | string  | ✅        | Book title             |
+  | `isbn`         | string  | ✅        | Unique 13-digit ISBN   |
+  | `img`          | file    | ❌        | Cover image (optional) |
+  | `stock`        | integer | ✅        | Total stock            |
+  | `pages`        | integer | ✅        | Number of pages        |
+  | `publish_year` | integer | ✅        | Year of publication    |
+  | `category`     | UUID    | ✅        | Category ID (can add more than 1)           |
+  | `author`       | UUID    | ✅        | Author ID              |
+  | `publisher`    | UUID    | ✅        | Publisher ID           |
+  | `shelf`        | UUID    | ✅        | Shelf ID               |
+  
+  ---
+  
+  ## 🔐 Authentication
+  
+  * This endpoint inherits authentication settings from the parent configuration.
+  * Only authenticated users with appropriate roles (Admin/Librarian) can create or modify books.
+  
+  ---
+  
+  ## ⚠️ Validation Errors
+  
+  * `isbn`: must be unique. If the value already exists in the database, an error will be raised:
+  
+    ```json
+    {
+      "isbn": ["book with this isbn already exists."]
+    }
+    ```
+  
+  ---
+  
+}

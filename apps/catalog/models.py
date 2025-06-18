@@ -9,7 +9,7 @@ class Author(BaseModel):
 
 class Publisher(BaseModel):
     name = models.CharField(max_length=50)
-    city = models.CharField(max_length=50)
+    city = models.CharField(max_length=50, blank=True, null=True)
 
 
 class Category(BaseModel):

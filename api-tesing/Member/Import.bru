@@ -1,0 +1,25 @@
+meta {
+  name: Import
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{BASE_URL}}/api/members/
+  body: multipartForm
+  auth: inherit
+}
+
+params:query {
+  ~limit: 1
+}
+
+body:multipart-form {
+  account.email: member12@member.com
+  account.fullname: Member1
+  account.password: member
+  nis: 12
+  profile_picture: @file(/home/faqih/Downloads/b77a9a64-e874-433e-9a6e-3ed9b6149807-removebg-preview.png)
+  phone_number: 12323a
+  ~_class.name: B
+}
