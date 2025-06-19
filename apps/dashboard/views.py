@@ -12,16 +12,9 @@ from core.permissions import IsAdminOrLibrarianOnly
 @api_view()
 @permission_classes([IsAdminOrLibrarianOnly])
 def get_home_data(request):
-    """
-    Dashboard Home
-    1. Total Books
-    2. Active Loan
-    3. Members
-    4. Overdue Loan
-    """
     total_books = Book.objects.count()
     total_members = Member.objects.count()
-    total_overdue_loan = Loan.objects.filter(status="active").count()
+    total_overdue_loan = Loan.objects.filter(status="overdue").count()
     total_pending_payments = Payment.objects.filter(status="pending").count()
 
     result = {

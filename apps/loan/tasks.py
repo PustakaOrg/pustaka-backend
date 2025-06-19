@@ -21,7 +21,6 @@ def process_new_ovedue_loan_task():
 
 def process_new_ovedue_loan():
     new_overdue_loans = get_new_overdue_loans()
-    print("here it is", new_overdue_loans)
     if not new_overdue_loans:
         return
     add_fine_for_new_loans(new_overdue_loans)
@@ -33,14 +32,14 @@ def remind_return_loan_task():
 
 def remind_return_loan():
     today_return_loans = get_today_return_day_loans()
-    print("HERE",today_return_loans)
     if not today_return_loans:
         return
     for loan in today_return_loans:
         delay = random.uniform(1, 10)
         time.sleep(delay)
         message = create_return_day_reminder_message(loan)
-        send_wa(loan.borrower.phone_number, message)
+        if loan.borrower.phone_number :
+            send_wa(loan.borrower.phone_number, message)
 
 
 @db_periodic_task(crontab(hour="6"))
@@ -56,4 +55,5 @@ def process_overdue_loan():
         delay = random.uniform(1, 10)
         time.sleep(delay)
         message = create_overdue_message(overdue_loan)
-        send_wa(overdue_loan.borrower.phone_number, message)
+        if overdue_loan.borrower.phone_number :
+            send_wa(overdue_loan.borrower.phone_number, message)
