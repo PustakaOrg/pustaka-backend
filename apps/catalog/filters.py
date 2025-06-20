@@ -63,3 +63,31 @@ class BookFilter(django_filters.FilterSet):
         if value:
             return queryset.filter(available_stock__gt=0)
         return queryset
+
+
+class CategoryFilter(django_filters.FilterSet):
+    q = django_filters.CharFilter(method="filter_search")
+
+    def filter_search(self, queryset, name, value):
+        return queryset.filter(Q(name__icontains=value))
+
+class PublisherFilter(django_filters.FilterSet):
+    q = django_filters.CharFilter(method="filter_search")
+
+    def filter_search(self, queryset, name, value):
+        return queryset.filter(Q(name__icontains=value))
+
+
+
+class ShelfFilter(django_filters.FilterSet):
+    q = django_filters.CharFilter(method="filter_search")
+
+    def filter_search(self, queryset, name, value):
+        return queryset.filter(Q(code__icontains=value))
+
+
+class AuthorFilter(django_filters.FilterSet):
+    q = django_filters.CharFilter(method="filter_search")
+
+    def filter_search(self, queryset, name, value):
+        return queryset.filter(Q(fullname__icontains=value))

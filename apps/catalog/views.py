@@ -4,7 +4,7 @@ import pandas as pd
 from rest_framework.decorators import action
 from django.db import transaction
 
-from apps.catalog.filters import BookFilter
+from apps.catalog.filters import AuthorFilter, BookFilter, CategoryFilter, PublisherFilter, ShelfFilter
 from .models import Author, Publisher, Category, Shelf, Book
 from .serializers import (
     AuthorSerializer,
@@ -22,6 +22,7 @@ class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
     permission_classes = [IsAdminOrLibrarianModify]
+    filterset_class = AuthorFilter
 
     @action(detail=False, methods=["get"], url_path="all")
     def all(self, request):
@@ -35,6 +36,7 @@ class PublisherViewSet(viewsets.ModelViewSet):
     queryset = Publisher.objects.all()
     serializer_class = PublisherSerializer
     permission_classes = [IsAdminOrLibrarianModify]
+    filterset_class = PublisherFilter
 
     @action(detail=False, methods=["get"], url_path="all")
     def all(self, request):
@@ -48,6 +50,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAdminOrLibrarianModify]
+    filterset_class = CategoryFilter
 
     @action(detail=False, methods=["get"], url_path="all")
     def all(self, request):
@@ -61,6 +64,7 @@ class ShelfViewSet(viewsets.ModelViewSet):
     queryset = Shelf.objects.all()
     serializer_class = ShelfSerializer
     permission_classes = [IsAdminOrLibrarianModify]
+    filterset_class = ShelfFilter
 
     @action(detail=False, methods=["get"], url_path="all")
     def all(self, request):
