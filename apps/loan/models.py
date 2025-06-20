@@ -60,7 +60,7 @@ class Payment(BaseModel):
     ]
     accepted_by = models.ForeignKey(
         to=Librarian,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="payments",
         null=True,
         blank=True,
