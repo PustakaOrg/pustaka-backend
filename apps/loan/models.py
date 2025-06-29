@@ -84,3 +84,9 @@ class Fine(BaseModel):
     payment = models.OneToOneField(
         to=Payment, on_delete=models.CASCADE, related_name="fines"
     )
+
+    def delete(self, *args, **kwargs):
+        # Delete payment first to prevent orphaned record
+        if self.payment:
+            self.payment.delete()
+        super().delete(*args, **kwargs)

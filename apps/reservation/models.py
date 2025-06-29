@@ -2,7 +2,6 @@ from django.db import models
 
 from apps.catalog.models import Book
 from apps.profiles.models import Librarian, Member
-from apps.reservation.tasks import notify_reservation_ready_task
 from core.models import BaseModel
 
 
@@ -39,6 +38,7 @@ class Reservation(BaseModel):
             reservation = Reservation.objects.get(pk=self.pk)
             old_status = reservation.status
             if old_status == "pending" and self.status == "ready":
+                from apps.reservation.tasks import notify_reservation_ready_task
                 notify_reservation_ready_task(reservation.id)
 
         super().save(*args, **kwargs)

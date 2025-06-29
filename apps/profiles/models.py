@@ -35,7 +35,7 @@ class Member(BaseModel):
 
 
 class Librarian(BaseModel):
-    nip = models.CharField(max_length=18)
+    nip = models.CharField(max_length=18,unique=True)
     phone_number = models.CharField(max_length=13,blank=True,null=True)
     account = models.OneToOneField(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="librarian")
 
