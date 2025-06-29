@@ -2,6 +2,7 @@ from django.db import models
 
 from apps.catalog.models import Book
 from apps.profiles.models import Librarian, Member
+from apps.reservation.tasks import notify_reservation_ready_task
 from core.models import BaseModel
 
 
@@ -31,3 +32,13 @@ class Reservation(BaseModel):
         blank=True,
     )
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
+
+    def save(self, *args, **kwargs):
+        # Get the old status from the database if the object already exists
+        if self.pk:
+            reservation = Reservation.objects.get(pk=self.pk)
+            old_status = reservation.status
+            if old_status == "pending" and self.status == "ready":
+                notify_reservation_ready_task(reservation.id)
+
+        super().save(*args, **kwargs)
