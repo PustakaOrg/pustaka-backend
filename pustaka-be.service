@@ -1,0 +1,12 @@
+[Unit]
+Description=Pustaka Backend
+After=network.target 
+
+[Service]
+User=root
+WorkingDirectory=/root/pustaka-backend
+ExecStart=/root/pustaka-backend/.venv/bin/gunicorn core.wsgi:application --bind 0.0.0.0:800 --workers 3
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

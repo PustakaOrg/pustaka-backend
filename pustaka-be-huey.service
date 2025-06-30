@@ -1,0 +1,14 @@
+[Unit]
+Description=Pustaka backend worker
+After=network.target
+ 
+[Service]
+User=root
+WorkingDirectory=/root/pustaka-backend
+ExecStart=/root/pustaka-backend/.venv/bin/python manage.py run_huey --workers 4
+Restart=always
+
+
+ 
+[Install]
+WantedBy=multi-user.target
