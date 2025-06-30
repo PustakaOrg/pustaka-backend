@@ -1,0 +1,16 @@
+[Unit]
+Description=Service for Pustaka
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/pustaka-backend
+Environment=COMPOSE_HTTP_TIMEOUT=600
+ExecStart=/usr/bin/env /usr/bin/docker compose -f /root/pustaka-backend/compose.yml up -d
+ExecStop=/usr/bin/env /usr/bin/docker compose -f /root/pustaka-backend/compose.yml stop
+StandardOutput=syslog
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
