@@ -1,3 +1,4 @@
+from django.utils import timezone
 from huey import crontab
 from huey.contrib.djhuey import db_periodic_task
 import random
@@ -15,9 +16,10 @@ from apps.loan.methods import (
 from apps.notification.utils import send_wa
 
 
-@db_periodic_task(crontab(hour="1"))
+@db_periodic_task(crontab(hour="1", minute=0))
 def process_new_ovedue_loan_task():
     process_new_ovedue_loan()
+
 
 def process_new_ovedue_loan():
     new_overdue_loans = get_new_overdue_loans()
@@ -26,9 +28,10 @@ def process_new_ovedue_loan():
     add_fine_for_new_loans(new_overdue_loans)
 
 
-@db_periodic_task(crontab(hour="5"))
+@db_periodic_task(crontab(hour="5", minute="0"))
 def remind_return_loan_task():
     remind_return_loan()
+
 
 def remind_return_loan():
     today_return_loans = get_today_return_day_loans()
@@ -38,13 +41,14 @@ def remind_return_loan():
         delay = random.uniform(1, 10)
         time.sleep(delay)
         message = create_return_day_reminder_message(loan)
-        if loan.borrower.phone_number :
+        if loan.borrower.phone_number:
             send_wa(loan.borrower.phone_number, message)
 
 
-@db_periodic_task(crontab(hour="6"))
+@db_periodic_task(crontab(hour="6", minute=0))
 def process_overdue_loan_task():
     process_overdue_loan()
+
 
 def process_overdue_loan():
     overdue_loans = get_current_overdue_loans()
@@ -55,5 +59,5 @@ def process_overdue_loan():
         delay = random.uniform(1, 10)
         time.sleep(delay)
         message = create_overdue_message(overdue_loan)
-        if overdue_loan.borrower.phone_number :
+        if overdue_loan.borrower.phone_number:
             send_wa(overdue_loan.borrower.phone_number, message)
