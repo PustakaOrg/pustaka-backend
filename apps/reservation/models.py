@@ -32,13 +32,13 @@ class Reservation(BaseModel):
     )
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
 
-    def save(self, *args, **kwargs):
-        # Get the old status from the database if the object already exists
-        if self.pk:
-            reservation = Reservation.objects.get(pk=self.pk)
-            old_status = reservation.status
-            if old_status == "pending" and self.status == "ready":
-                from apps.reservation.tasks import notify_reservation_ready_task
-                notify_reservation_ready_task(reservation.id)
-
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     # Get the old status from the database if the object already exists
+    #     if self.pk:
+    #         reservation = Reservation.objects.get(pk=self.pk)
+    #         old_status = reservation.status
+    #         if old_status == "pending" and self.status == "ready":
+    #             from apps.reservation.tasks import notify_reservation_ready_task
+    #             notify_reservation_ready_task(reservation.id)
+    #
+    #     super().save(*args, **kwargs)

@@ -1,5 +1,5 @@
 import django_filters
-from .models import Batch, Class, Member
+from .models import Batch, Class, Librarian, Member
 from django.db.models import Q
 
 
@@ -18,7 +18,19 @@ class MemberFilter(django_filters.FilterSet):
             | Q(account__fullname__icontains=value)
             | Q(id__iexact=value)  # for UUID match
         )
+class LibrarianFilter(django_filters.FilterSet):
+    q = django_filters.CharFilter(method="filter_search", label="Search")
 
+    class Meta:
+        model = Librarian
+        fields = ["q"]
+
+    def filter_search(self, queryset, name, value):
+        return queryset.filter(
+            Q(nip__iexact=value)
+            | Q(account__fullname__icontains=value)
+            | Q(id__iexact=value)  
+        )
 
 class ClassFilter(django_filters.FilterSet):
     q = django_filters.CharFilter(method="filter_search", label="Search")

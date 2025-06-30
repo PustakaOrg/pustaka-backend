@@ -8,7 +8,7 @@ from django.db import transaction
 
 from apps.authentication.serializers import UserSerializer
 from apps.authentication.models import User
-from apps.profiles.filters import BatchFilter, ClassFilter, MemberFilter
+from apps.profiles.filters import BatchFilter, ClassFilter, LibrarianFilter, MemberFilter
 from core.permissions import (
     IsAdminOrLibrarianModify,
     IsAdminOrLibrarianOrOwner,
@@ -28,6 +28,7 @@ class LibrarianViewSet(viewsets.ModelViewSet):
     queryset = Librarian.objects.all()
     serializer_class = LibrarianSerializer
     permission_classes = [IsAdminOrOwner]
+    filterset_class = LibrarianFilter
 
 
 class MemberViewSet(viewsets.ModelViewSet):

@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from apps.activity.methods import log_activity
-from apps.catalog.models import Book
 from apps.catalog.serializers import BookSerializer
 from apps.profiles.serializers import LibrarianSerializer, MemberSerializer
 from apps.reservation.models import Reservation
