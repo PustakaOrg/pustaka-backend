@@ -3,7 +3,7 @@ server {
     server_name 103.59.160.101;
  
     location /media/ {
-        root /root/pustaka-backend/media;
+        root /root/pustaka-backend;
     }
  
     location / {
