@@ -35,6 +35,8 @@ SECRET_KEY = "django-insecure-4z(t5!m0#^frs=ruxbp7$=_zjp#t26&3^0&tf=pu07491i(4*r
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
     "pc.cat-anoles.ts.net",
     "192.168.100.15",
     "103.59.160.101",

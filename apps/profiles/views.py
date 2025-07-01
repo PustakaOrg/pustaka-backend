@@ -8,7 +8,12 @@ from django.db import transaction
 
 from apps.authentication.serializers import UserSerializer
 from apps.authentication.models import User
-from apps.profiles.filters import BatchFilter, ClassFilter, LibrarianFilter, MemberFilter
+from apps.profiles.filters import (
+    BatchFilter,
+    ClassFilter,
+    LibrarianFilter,
+    MemberFilter,
+)
 from core.permissions import (
     IsAdminOrLibrarianModify,
     IsAdminOrLibrarianOrOwner,
@@ -52,7 +57,7 @@ class MemberViewSet(viewsets.ModelViewSet):
             )
 
         try:
-            df = pd.read_csv(csv_file)
+            df = pd.read_csv(csv_file,dtype=str)
 
             created_count = 0
             skipped_count = 0
@@ -67,30 +72,51 @@ class MemberViewSet(viewsets.ModelViewSet):
                             skipped_count += 1
                             continue
 
-                        user = User.objects.create_member_user(
-                            fullname=row["Nama"],
-                            email=row["Email"],
-                            password=row["Password"],
-                        )
+                        email = str(row["Email"]).strip()
+                        nama = str(row["Nama"]).strip()
+                        password = str(row["Password"]).strip()
 
-                        _class, _ = Class.objects.get_or_create(name=row["Kelas"])
-                        batch, _ = Batch.objects.get_or_create(name=row["Angkatan"])
-
+                        kelas = str(row["Kelas"]).strip()
+                        angkatan = str(row["Angkatan"]).strip()
                         phone_number = (
                             str(row.get("No HP")).strip()
                             if pd.notna(row.get("No HP"))
-                            and str(row.get("No HP")).strip()
                             else None
                         )
+                        expires_date = (
+                            str(row.get("Expires Date")).strip()
+                            if pd.notna(row.get("Expires Date"))
+                            else None
+                        )
+                        print(f"Expires Date: {expires_date}")
 
-                        Member.objects.create(
-                            account=user,
-                            nis=nis,
-                            _class=_class,
-                            batch=batch,
-                            phone_number=phone_number,
+
+                        user = User.objects.create_member_user(
+                            fullname=nama,
+                            email=email,
+                            password=password,
                         )
 
+                        _class, _ = Class.objects.get_or_create(name=kelas)
+                        batch, _ = Batch.objects.get_or_create(name=angkatan)
+
+                        if expires_date :
+                            Member.objects.create(
+                                account=user,
+                                nis=nis,
+                                _class=_class,
+                                batch=batch,
+                                phone_number=phone_number,
+                                expires_date=expires_date,
+                            )
+                        else:
+                            Member.objects.create(
+                                account=user,
+                                nis=nis,
+                                _class=_class,
+                                batch=batch,
+                                phone_number=phone_number,
+                            )
                         created_count += 1
 
                     except Exception as e:
