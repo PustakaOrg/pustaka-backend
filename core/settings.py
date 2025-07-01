@@ -39,6 +39,7 @@ ALLOWED_HOSTS = [
     "192.168.100.15",
     "103.59.160.101",
     "103.59.160.101:8000",
+    "api.pustakaan.my.id",
 ]
 
 INSTALLED_APPS = [
@@ -89,7 +90,14 @@ SIMPLE_JWT = {
 }
 
 # CORS_ALLOW_ALL_ORIGINS = True # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
-CORS_ALLOWED_ORIGINS = ["http://localhost:5173", "http://103.59.160.101:5173"]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://103.59.160.101:5173",
+    "http://www.pustakaan.my.id",
+    "https://www.pustakaan.my.id",
+    "http://pustakaan.my.id",
+    "https://pustakaan.my.id",
+]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

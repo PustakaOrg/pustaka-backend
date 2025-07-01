@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name 103.59.160.101;
+    server_name 103.59.160.101 api.pustakaan.my.id;
  
     location /media/ {
         root /root/pustaka-backend;
