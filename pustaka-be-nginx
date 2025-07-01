@@ -4,6 +4,7 @@ server {
  
     location /media/ {
         root /root/pustaka-backend;
+        autoindex on;
     }
  
     location / {
