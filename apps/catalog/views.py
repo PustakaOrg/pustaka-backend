@@ -95,7 +95,7 @@ class BookViewSet(viewsets.ModelViewSet):
             )
 
         try:
-            df = pd.read_csv(csv_file)
+            df = pd.read_csv(csv_file,dtype=str)
 
             created_count = 0
             skipped_count = 0
@@ -124,12 +124,13 @@ class BookViewSet(viewsets.ModelViewSet):
                         book = Book.objects.create(
                             isbn=isbn,
                             title=row["Judul"].strip(),
-                            publish_year=int(row["Tahun Terbit"]),
+                            publish_year=int(row["Tahun Terbit"]) if not pd.isna(row["Tahun Terbit"]) else 0,
                             stock=int(row["Jumlah"]),
                             available_stock=int(row["Jumlah"]),
                             author=author,
                             publisher=publisher,
                             shelf=shelf,
+                            pages=int(row["Halaman"]) if not pd.isna(row["Halaman"]) else 0
                         )
 
                         book.category.add(category)
