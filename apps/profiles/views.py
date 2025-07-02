@@ -16,7 +16,7 @@ from apps.profiles.filters import (
 )
 from core.permissions import (
     IsAdminOrLibrarianModify,
-    IsAdminOrLibrarianOrOwner,
+    IsAdminOrLibrarianOrMemberOwner,
     IsAdminOrOwner,
 )
 
@@ -39,7 +39,7 @@ class LibrarianViewSet(viewsets.ModelViewSet):
 class MemberViewSet(viewsets.ModelViewSet):
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
-    permission_classes = [IsAdminOrLibrarianOrOwner]
+    permission_classes = [IsAdminOrLibrarianOrMemberOwner]
     filterset_class = MemberFilter
 
     @action(detail=False, methods=["post"], url_path="import")
