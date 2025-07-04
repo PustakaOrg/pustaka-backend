@@ -33,3 +33,15 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["id", "fullname", "email", "password"]
+
+# Import django packages
+from django.utils.translation import gettext_lazy as _
+
+# Import external packages
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer as SimpleTokenObtainPairSerializer
+
+
+class TokenObtainPairSerializer(SimpleTokenObtainPairSerializer):
+    default_error_messages = {
+        'no_active_account': _('CUSTOM ERROR MESSAGE HERE')
+    }
