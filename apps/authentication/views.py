@@ -9,3 +9,11 @@ class UserViewset(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAdmin]
+
+from rest_framework_simplejwt.views import TokenObtainPairView as SimpleTokenObtainPairView
+
+from apps.authentication.serializers import TokenObtainPairSerializer
+
+
+class TokenObtainPairView(SimpleTokenObtainPairView):
+    serializer_class = TokenObtainPairSerializer
