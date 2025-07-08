@@ -4,6 +4,7 @@ from apps.activity.methods import log_activity
 from apps.catalog.models import Book
 from apps.catalog.serializers import BookSerializer
 from apps.profiles.serializers import LibrarianSerializer, MemberSerializer
+from apps.reservation.models import Reservation
 from .models import Loan, Payment, Fine
 
 
@@ -19,7 +20,7 @@ class PopularBookSerializer(serializers.ModelSerializer):
             "isbn",
             # "author",
             "loan_count",
-        ]  
+        ]
 
 
 class LoanSerializer(serializers.ModelSerializer):
@@ -46,11 +47,36 @@ class LoanSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         if validated_data["return_date"] < validated_data["loan_date"]:
-            raise serializers.ValidationError("Return date must be after loan date.")
+            raise serializers.ValidationError(
+                {"detail": "Return date must be after loan date."}
+            )
         book = validated_data["book"]
+        borrower = validated_data["borrower"]
+
+        existing_reservation = Reservation.objects.filter(
+            book=book, reservant=borrower, status__in=["pending", "ready"]
+        ).exists()
+
+        if existing_reservation:
+            raise serializers.ValidationError(
+                {"detail": "Anda sedang mereservasi buku ini."}
+            )
+
+        existing_loan = Loan.objects.filter(
+            book=book,
+            borrower=borrower,
+            status__in=["active", "overdue"]
+        ).exists()
+
+        if existing_loan:
+            raise serializers.ValidationError(
+                {"detail": "Anda sudah meminjam buku ini."}
+            )
 
         if book.available_stock < 1:
-            raise serializers.ValidationError(f"Book '{book.title}' is out of stock.")
+            raise serializers.ValidationError(
+                {"detail": f"Book '{book.title}' is out of stock."}
+            )
 
         book.available_stock -= 1
         book.save()

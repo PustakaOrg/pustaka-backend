@@ -24,14 +24,6 @@ class ReservationSerializer(serializers.ModelSerializer):
 
         return representation
 
-
-    def create(self, validated_data):
-        reservation = super().create(validated_data)
-
-        log_activity("reserved", f"{reservation.reservant.account.fullname} mereservasi {reservation.book.title}")
-        return reservation
-
-
     class Meta:
         model = Reservation
         fields = [
@@ -44,5 +36,5 @@ class ReservationSerializer(serializers.ModelSerializer):
             "accepted_by",
             "status",
             "created_at",
-            "updated_at"
+            "updated_at",
         ]
