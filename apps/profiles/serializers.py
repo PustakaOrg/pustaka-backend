@@ -45,15 +45,13 @@ class MemberSerializer(serializers.ModelSerializer):
                 account.password = make_password(account_data["password"])
             account.save()
 
-        instance.profile_picture = validated_data.get(
-            "profile_picture", instance.profile_picture
-        )
-        instance.phone_number = validated_data.get(
-            "phone_number", instance.phone_number
-        )
-        instance.nis = validated_data.get("nis", instance.nis)
+
+        for attr, value in validated_data.items():
+                setattr(instance, attr, value)
+
         instance.save()
         return instance
+
 
     
     def to_representation(self, instance):

@@ -27,6 +27,9 @@ class Member(BaseModel):
     batch = models.ForeignKey(to=Batch, on_delete=models.SET_NULL, null=True, blank=True)
     expires_date = models.DateField(default=three_years_from_now)
 
+    def is_expired(self):
+        return self.expires_date < timezone.now().date()
+
     def delete(self, *args, **kwargs):
         user = self.account
         super().delete(*args, **kwargs)  
