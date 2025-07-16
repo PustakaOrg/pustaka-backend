@@ -18,12 +18,17 @@ urlpatterns = [
     path("api/", include("apps.profiles.urls")),
     path("api/", include("apps.catalog.urls")),
     path("api/", include("apps.loan.urls")),
+    path("schema/", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "api/docs/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
+    path("api/", include("apps.notification.urls")),
     path("api/", include("apps.reservation.urls")),
     path("api/", include("apps.dashboard.urls")),
     path("api/", include("apps.activity.urls")),
-    path("schema/", SpectacularAPIView.as_view(), name="schema"),
-    path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
-    path("api/", include("apps.notification.urls")),
+    path("api/", include("apps.about.urls"))
 ]
 
 if DEBUG:

@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     "apps.settings",
     "apps.notification",
     "apps.activity",
+    "apps.about"
 ]
 
 AUTH_USER_MODEL = "authentication.User"
