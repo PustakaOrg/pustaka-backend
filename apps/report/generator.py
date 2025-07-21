@@ -16,6 +16,7 @@ import calendar
 from datetime import date, datetime, timedelta
 import random
 
+from apps.catalog.models import Book
 from apps.loan.models import Loan
 
 month_names = {
@@ -83,6 +84,7 @@ class LibraryReportGenerator:
     def get_month_name_id(self, month):
         """Get Indonesian month name"""
         return month_names.get(month, "UNKNOWN")
+
     def _get_classification_from_category(self, category_name):
         """Maps a book category name to its broader classification."""
         try:
@@ -109,7 +111,7 @@ class LibraryReportGenerator:
             elif 900 <= numeric_category < 1000:
                 return "900 Sejarah, Biografi & Geografi"
             else:
-                return "Lain-lain" # Or handle unknown numeric categories as needed
+                return "Lain-lain"  # Or handle unknown numeric categories as needed
         except ValueError:
             # Handle non-numeric classifications (e.g., "F" -> "F Fiksi")
             if category_name == "F":
@@ -119,7 +121,7 @@ class LibraryReportGenerator:
             elif category_name == "Audio Visual":
                 return "Audio Visual"
             else:
-                return "Lain-lain" # Default for unknown non-numeric categories
+                return "Lain-lain"  # Default for unknown non-numeric categories
 
     def calculate_working_days(self, month, year):
         """Calculate working days (Monday-Friday) in the month"""
@@ -141,32 +143,39 @@ class LibraryReportGenerator:
         """
         # Fetch all relevant loans for the given month and year
         # Use select_related to efficiently retrieve related Book and Category objects
-        loans_in_month = Loan.objects.filter(
-            loan_date__year=year,
-            loan_date__month=month
-        ).select_related('book', 'book__category') # Assuming book has a ForeignKey to Category
+        loans_in_month = (
+            Loan.objects.filter(loan_date__year=year, loan_date__month=month)
+            .select_related("book")
+            .prefetch_related("book__category")
+        )
 
         # Initialize dictionaries to hold counts for each classification
         classification_titles = {cls: set() for cls in classifications}
-        classification_titles["Lain-lain"] = set() # To store unique titles (by ID or title string)
-        
+        classification_titles["Lain-lain"] = (
+            set()
+        )  # To store unique titles (by ID or title string)
+
         classification_copies = {cls: 0 for cls in classifications}
-        classification_copies["Lain-lain"] = 0 # To store total loan instances (copies loaned)
+        classification_copies["Lain-lain"] = (
+            0  # To store total loan instances (copies loaned)
+        )
 
         for loan_instance in loans_in_month:
             book = loan_instance.book
-            
+
             # Ensure book and its category exist
             if book and book.category:
                 # Assuming 'category' is a ForeignKey to a Category model
                 # and Category model has a 'name' field
-                category_name = book.category[0].name 
+                category_name = book.category.first().name
                 classification = self._get_classification_from_category(category_name)
 
                 # Add book to the set of unique titles for its classification
                 # Use book.id for uniqueness if possible, otherwise book.title
                 if classification in classification_titles:
-                    classification_titles[classification].add(book.id) # Use book.id for true uniqueness
+                    classification_titles[classification].add(
+                        book.id
+                    )  # Use book.id for true uniqueness
                     classification_copies[classification] += 1
                 else:
                     # Handle 'Lain-lain' for unmapped categories
@@ -181,26 +190,30 @@ class LibraryReportGenerator:
         for i, classification_name in enumerate(classifications, 1):
             titles_count = len(classification_titles[classification_name])
             copies_count = classification_copies[classification_name]
-            data.append([str(i), classification_name, str(titles_count), str(copies_count)])
+            data.append(
+                [str(i), classification_name, str(titles_count), str(copies_count)]
+            )
             total_unique_titles += titles_count
             total_loaned_copies += copies_count
-        
+
         # Add "Lain-lain" if there were any unmapped categories
         lain_lain_titles_count = len(classification_titles["Lain-lain"])
         lain_lain_copies_count = classification_copies["Lain-lain"]
 
         if lain_lain_titles_count > 0 or lain_lain_copies_count > 0:
-            data.append([
-                str(len(classifications) + 1),
-                "Lain-lain",
-                str(lain_lain_titles_count),
-                str(lain_lain_copies_count)
-            ])
+            data.append(
+                [
+                    str(len(classifications) + 1),
+                    "Lain-lain",
+                    str(lain_lain_titles_count),
+                    str(lain_lain_copies_count),
+                ]
+            )
             total_unique_titles += lain_lain_titles_count
             total_loaned_copies += lain_lain_copies_count
 
         data.append(["", "Jumlah", str(total_unique_titles), str(total_loaned_copies)])
-        return data, total_unique_titles, total_loaned_copies    
+        return data, total_unique_titles, total_loaned_copies
 
     def generate_member_data(self):
         today = date(2025, 7, 18)  # Hardcoded for demonstration based on current date
@@ -269,23 +282,76 @@ class LibraryReportGenerator:
 
         return table_data, total_overall_members
 
-    def generate_collection_data(self):
-        """Generate collection addition data"""
+    # --- NEW: generate_collection_data ---
+    def generate_collection_data(self, month, year):
+        """
+        Generates collection addition data for a specific month and year,
+        categorized by classification, using actual Django Book data.
+        """
+        # Books are considered newly added if their 'created_at' date falls within
+        # the specified month and year.
+        # Use prefetch_related for ManyToManyField 'category'
+        newly_added_books = Book.objects.filter(
+            created_at__year=year, created_at__month=month
+        ).prefetch_related("category")
 
+        # Initialize dictionaries to hold counts for each classification
+        # titles: count of unique book titles newly added
+        # copies: sum of 'stock' for newly added books
+        classification_counts = {
+            cls: {"titles": 0, "copies": 0} for cls in classifications
+        }
+        classification_counts["Lain-lain"] = {"titles": 0, "copies": 0}
+
+        for book_instance in newly_added_books:
+            # A book can have multiple categories, so we need to iterate or decide on a primary
+            # For this report, we'll try to map it to the first category, or 'Lain-lain' if none
+            if book_instance.category.exists():
+                # Get the name of the first category for classification
+                category_name = book_instance.category.first().name
+                classification = self._get_classification_from_category(category_name)
+            else:
+                classification = "Lain-lain"  # No category assigned
+
+            # Increment counts for the determined classification
+            if classification in classification_counts:
+                classification_counts[classification]["titles"] += 1
+                classification_counts[classification]["copies"] += book_instance.stock
+            else:
+                # This should ideally not happen if 'Lain-lain' is handled, but as a fallback
+                classification_counts["Lain-lain"]["titles"] += 1
+                classification_counts["Lain-lain"]["copies"] += book_instance.stock
+
+        # Prepare the data for display and calculate totals
         data = []
         total_titles = 0
         total_copies = 0
 
-        for i, classification in enumerate(classifications, 1):
-            titles = 0
-            copies = 0
-            source = "0"
-            data.append([str(i), classification, str(titles), str(copies)])
+        for i, classification_name in enumerate(classifications, 1):
+            titles = classification_counts[classification_name]["titles"]
+            copies = classification_counts[classification_name]["copies"]
+            data.append([str(i), classification_name, str(titles), str(copies)])
             total_titles += titles
             total_copies += copies
 
-        data.append(["", "Total", str(total_titles), str(total_copies)])
-        return data
+        # Add "Lain-lain" if there were any unmapped categories or books without categories
+        lain_lain_titles = classification_counts["Lain-lain"]["titles"]
+        lain_lain_copies = classification_counts["Lain-lain"]["copies"]
+
+        if lain_lain_titles > 0 or lain_lain_copies > 0:
+            data.append(
+                [
+                    str(len(classifications) + 1),
+                    "Lain-lain",
+                    str(lain_lain_titles),
+                    str(lain_lain_copies),
+                ]
+            )
+            total_titles += lain_lain_titles
+            total_copies += lain_lain_copies
+
+        data.append(["", "Jumlah", str(total_titles), str(total_copies)])
+        return data, total_titles, total_copies
 
     def generate_report(self, month, year, filename=None):
         """Generate the complete PDF report"""
@@ -406,7 +472,7 @@ class LibraryReportGenerator:
             )
         )
 
-        loan_data, total_titles, total_copies = self.generate_loan_data()
+        loan_data, total_titles, total_copies = self.generate_loan_data(month, year)
         loan_headers = [["No.", "Klasifikasi", "Judul", "Eksemplar"]]
         loan_table_data = loan_headers + loan_data
 
@@ -433,7 +499,7 @@ class LibraryReportGenerator:
         # Section D: Collection Addition
         section_d_title = Paragraph("D. PENAMBAHAN KOLEKSI", self.heading_style)
 
-        collection_data = self.generate_collection_data()
+        collection_data, _, _ = self.generate_collection_data(month, year)
         collection_headers = [
             [
                 "No.",
