@@ -1,3 +1,4 @@
+import io
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -56,6 +57,7 @@ class LibraryReportGenerator:
     def __init__(self):
         self.styles = getSampleStyleSheet()
         self.setup_custom_styles()
+        self.filename = None 
 
     def setup_custom_styles(self):
         """Setup custom paragraph styles"""
@@ -358,16 +360,10 @@ class LibraryReportGenerator:
         if filename is None:
             month_name = self.get_month_name_id(month).capitalize()
             filename = f"Laporan_Perpustakaan_{month_name}_{year}.pdf"
+            self.filename = filename
 
-        doc = SimpleDocTemplate(
-            filename,
-            pagesize=A4,
-            rightMargin=2 * cm,
-            leftMargin=2 * cm,
-            topMargin=2 * cm,
-            bottomMargin=2 * cm,
-        )
 
+        
         story = []
 
         # Title
@@ -440,34 +436,34 @@ class LibraryReportGenerator:
         # story.append(Spacer(1, 15))
 
         # Section b: Total Members
-        section_b_title = Paragraph("B. JUMLAH ANGGOTA", self.heading_style)
-
-        member_data, total_members = self.generate_member_data()
-
-        member_table = Table(member_data, colWidths=[3 * inch, 1.5 * inch])
-        member_table.setStyle(
-            TableStyle(
-                [
-                    ("BACKGROUND", (0, 0), (-1, 0), colors.grey),
-                    ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
-                    ("ALIGN", (0, 0), (-1, -1), "CENTER"),
-                    ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-                    ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
-                    ("FONTSIZE", (0, 0), (-1, -1), 9),
-                    ("GRID", (0, 0), (-1, -1), 1, colors.black),
-                    ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-                    ("BACKGROUND", (0, -1), (-1, -1), colors.lightgrey),
-                    ("FONTNAME", (0, -1), (-1, -1), "Helvetica-Bold"),
-                ]
-            )
-        )
-        story.append(KeepTogether([section_b_title, member_table]))
-        story.append(Spacer(1, 15))
+        # section_b_title = Paragraph("B. JUMLAH ANGGOTA", self.heading_style)
+        #
+        # member_data, total_members = self.generate_member_data()
+        #
+        # member_table = Table(member_data, colWidths=[3 * inch, 1.5 * inch])
+        # member_table.setStyle(
+        #     TableStyle(
+        #         [
+        #             ("BACKGROUND", (0, 0), (-1, 0), colors.grey),
+        #             ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+        #             ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+        #             ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+        #             ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
+        #             ("FONTSIZE", (0, 0), (-1, -1), 9),
+        #             ("GRID", (0, 0), (-1, -1), 1, colors.black),
+        #             ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        #             ("BACKGROUND", (0, -1), (-1, -1), colors.lightgrey),
+        #             ("FONTNAME", (0, -1), (-1, -1), "Helvetica-Bold"),
+        #         ]
+        #     )
+        # )
+        # story.append(KeepTogether([section_b_title, member_table]))
+        # story.append(Spacer(1, 15))
 
         # Section C: Monthly Loans
         story.append(
             Paragraph(
-                f"C. JUMLAH PEMINJAMAN BULAN {self.get_month_name_id(month)}",
+                f"B. JUMLAH PEMINJAMAN BULAN {self.get_month_name_id(month)}",
                 self.heading_style,
             )
         )
@@ -497,7 +493,7 @@ class LibraryReportGenerator:
         story.append(Spacer(1, 10))
 
         # Section D: Collection Addition
-        section_d_title = Paragraph("D. PENAMBAHAN KOLEKSI", self.heading_style)
+        section_d_title = Paragraph("C. PENAMBAHAN KOLEKSI", self.heading_style)
 
         collection_data, _, _ = self.generate_collection_data(month, year)
         collection_headers = [
@@ -577,9 +573,21 @@ class LibraryReportGenerator:
         story.append(signature_table)
 
         # Build PDF
+        buffer = io.BytesIO()
+        doc = SimpleDocTemplate(
+            buffer,
+            pagesize=A4,
+            rightMargin=2 * cm,
+            leftMargin=2 * cm,
+            topMargin=2 * cm,
+            bottomMargin=2 * cm,
+        )
+
         doc.build(story)
-        print(f"PDF report generated: {filename}")
-        return filename
+        
+        buffer.seek(0)
+        return buffer.getvalue()
+
 
 
 # Usage functions
